@@ -1,2 +1,2 @@
 __author__ = 'Eduard Trott'
-print('one more time')
+print('one more times')
