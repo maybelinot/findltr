@@ -1,2 +1,6 @@
 __author__ = 'Eduard Trott'
-print('one more times')
+print('hmm')
+
+
+def somefunc():
+    pass
