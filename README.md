@@ -14,3 +14,6 @@ literature
 
 binary search with LCP array
 http://www.cbcb.umd.edu/confcour/CMSC858W-materials/Raul-Lecture9.pdf
+
+LCP compare
+http://people.unipmn.it/manzini/papers/swat04.pdf
