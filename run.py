@@ -11,12 +11,15 @@ class GenomeClass:
     """
     def __init__(self, filename):
         handle = open(filename, "rU")
-        self.data = list(SeqIO.parse(handle, "fasta"))
+        self.data = next(SeqIO.parse(handle, "fasta"))
+        self.__x = 5
+        self.x = 6
 
     def __str__(self):
         """
         Human readable representation of genome
         """
+
     def run(self):
         self.de_novo(self)
 
@@ -25,14 +28,22 @@ class GenomeClass:
         """
         De novo identification of young intact LTR retroelements
         """
-        def de_novo_first_step(name):
-            """
+        # for one fasta sequence
 
-            """
-            print(name)
-        de_novo_first_step('Vasya')
+        # de_novo_first_step(binary searching with LCP array)
+        min_seq_len = 40
+        min_distances = 1000
+        max_distances = 20000
+        print(len(self.data.seq))
+        for idx in range(len(self.data.seq) - (min_seq_len + min_distances)):
+            pass
+
+        # de_novo_second_step
+
+        # de_novo_last_step
 
 genome = GenomeClass(FILENAME)
-genome.de_novo(genome)
+genome.run()
+# print(genome.__x)
 # self.data[0].seq
 
