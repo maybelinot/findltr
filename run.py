@@ -1,6 +1,7 @@
 __author__ = 'Eduard Trott'
 
 from Bio import SeqIO
+import time
 
 FILENAME = "Homo sapiens chromosome X genomic scaffold, GRCh38 Primary Assembly HSCHRX_CTG3.fasta"
 
@@ -23,7 +24,6 @@ def get_height(text, suffix_array):
         if h > 0:
             h -= 1
     return lcp
-
 
 class GenomeClass:
     """
@@ -54,15 +54,25 @@ class GenomeClass:
         min_seq_len = 40
         min_distances = 1000
         max_distances = 20000
-        seq = '$'+str(self.data.seq[0:10])
-        satupes = sorted([(seq[i:],i) for i in range(0,len(seq))])
+
+
+        # seq = str(self.data.seq[0:10]) + '$'
+        seq = 'abracadabracada$'
+        start_time = time.time()
+        # sufobj = SuffixTree(seq)
+        # sa, lcp1 = sufobj.saLcp()
+        # print(sa, lcp1)
+        satupes = sorted([(seq[i:], i) for i in range(0, len(seq))])
         suffix_array = list(map(lambda x: x[1], satupes))
         lcp = get_height(seq, suffix_array)
         print(seq)
         print(suffix_array)
         print(lcp)
-        for idx in range(len(self.data.seq) - (min_seq_len + min_distances)):
-            pass
+        print("--- %s seconds ---" % (time.time() - start_time))
+        pattern = 'cadab'
+        L = 0
+        # for idx in range(len(self.data.seq) - (min_seq_len + min_distances)):
+        #     pass
 
         # de_novo_second_step
 
