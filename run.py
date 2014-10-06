@@ -5,7 +5,7 @@ import time
 
 FILENAME = "Homo sapiens chromosome X genomic scaffold, GRCh38 Primary Assembly HSCHRX_CTG3.fasta"
 
-def get_height(text, suffix_array):
+def get_lcp(text, suffix_array):
     lcp = [0]*len(suffix_array)
     rank = [0]*len(suffix_array)
     n = len(suffix_array)
@@ -24,6 +24,28 @@ def get_height(text, suffix_array):
         if h > 0:
             h -= 1
     return lcp
+
+
+def count_lcp(text, pattern):
+    min_len = min(len(text), len(pattern))
+    if min_len < 1:
+        return 0
+    for i in range(min_len):
+        if text[i] != pattern[i]:
+            i -= 1
+            break
+    return i+1
+
+print(count_lcp('', 'a'))
+
+
+def find_pattern(t,p,lcp):
+    L = 0
+    R = len(t)
+    M = len(t)//2
+
+    pass
+
 
 class GenomeClass:
     """
@@ -55,21 +77,17 @@ class GenomeClass:
         min_distances = 1000
         max_distances = 20000
 
-
         # seq = str(self.data.seq[0:10]) + '$'
-        seq = 'abracadabracada$'
+        seq = 'parampampam$'
         start_time = time.time()
-        # sufobj = SuffixTree(seq)
-        # sa, lcp1 = sufobj.saLcp()
-        # print(sa, lcp1)
         satupes = sorted([(seq[i:], i) for i in range(0, len(seq))])
         suffix_array = list(map(lambda x: x[1], satupes))
-        lcp = get_height(seq, suffix_array)
+        lcp = get_lcp(seq, suffix_array)
         print(seq)
         print(suffix_array)
         print(lcp)
         print("--- %s seconds ---" % (time.time() - start_time))
-        pattern = 'cadab'
+        pattern = 'pam'
         L = 0
         # for idx in range(len(self.data.seq) - (min_seq_len + min_distances)):
         #     pass
