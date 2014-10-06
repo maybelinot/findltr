@@ -39,12 +39,28 @@ def count_lcp(text, pattern):
 print(count_lcp('', 'a'))
 
 
-def find_pattern(t,p,lcp):
-    L = 0
-    R = len(t)
-    M = len(t)//2
-
-    pass
+def find_pattern(text, pattern, lcp, sa):
+    left = 0
+    right = len(text)
+    middle = len(text)//2
+    while True:
+        if middle - right < 2:
+            break
+        pattern_lcp = count_lcp(pattern, text[sa[left]:])
+        if pattern_lcp > lcp(middle):
+            right = middle
+            middle = (left + right) //2
+        elif pattern_lcp < lcp(middle):
+            left = middle
+            middle = (left + right) //2
+        else:
+            length = min(len(pattern), len(text[sa[middle]:]))
+            if pattern[:length] > text[sa[middle]:sa[middle]+length]:
+                pass
+            elif pattern[:length] < text[sa[middle]:sa[middle]+length]:
+                pass
+            else:
+                return pattern
 
 
 class GenomeClass:
@@ -97,10 +113,7 @@ class GenomeClass:
         # de_novo_last_step
 
 genome = GenomeClass(FILENAME)
-genome.run()
-
-
-
+# genome.run()
 
 # print(genome.__x)
 # self.data[0].seq
