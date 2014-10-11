@@ -49,18 +49,20 @@ def find_pattern(text, pattern, lcp, sa):
         pattern_lcp = count_lcp(pattern, text[sa[left]:])
         if pattern_lcp > lcp(middle):
             right = middle
-            middle = (left + right) //2
+            middle = (left + right) // 2
         elif pattern_lcp < lcp(middle):
             left = middle
-            middle = (left + right) //2
+            middle = (left + right) // 2
         else:
             length = min(len(pattern), len(text[sa[middle]:]))
             if pattern[:length] > text[sa[middle]:sa[middle]+length]:
-                pass
+                left = middle
+                middle = (left + right) // 2
             elif pattern[:length] < text[sa[middle]:sa[middle]+length]:
-                pass
+                right = middle
+                middle = (left + right) // 2
             else:
-                return pattern
+                return middle, len(pattern)
 
 
 class GenomeClass:
