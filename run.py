@@ -38,14 +38,13 @@ def count_lcp(text, pattern):
     return i+1
 
 
-def find_pattern(text, pattern, lcp, sa):
-    left = 0
+def find_pattern(text, pattern, lcp, sa, output=[], left=0):
     right = len(text)
     middle = len(text)//2
     while True:
         print(left, middle, right)
         if middle - left < 2:
-            break
+            return output
         print(sa)
         pattern_lcp = max([count_lcp(pattern, text[sa[idx][1]:]) for idx in range(left, middle)])
         print(pattern_lcp, lcp[middle])
@@ -64,7 +63,9 @@ def find_pattern(text, pattern, lcp, sa):
                 right = middle
                 middle = (left + right) // 2
             else:
-                return middle, len(pattern)
+                output.append((middle, len(pattern)))
+                find_pattern(text, pattern, lcp, sa, output, middle + 1)
+
 
 
 class GenomeClass:
