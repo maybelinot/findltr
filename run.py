@@ -5,6 +5,7 @@ import time
 
 FILENAME = "Homo sapiens chromosome X genomic scaffold, GRCh38 Primary Assembly HSCHRX_CTG3.fasta"
 
+
 def get_lcp(text, suffix_array):
     lcp = [0]*len(suffix_array)
     rank = [0]*len(suffix_array)
@@ -36,29 +37,30 @@ def count_lcp(text, pattern):
             break
     return i+1
 
-print(count_lcp('', 'a'))
-
 
 def find_pattern(text, pattern, lcp, sa):
     left = 0
     right = len(text)
     middle = len(text)//2
     while True:
-        if middle - right < 2:
+        print(left, middle, right)
+        if middle - left < 2:
             break
-        pattern_lcp = count_lcp(pattern, text[sa[left]:])
-        if pattern_lcp > lcp(middle):
+        print(sa)
+        pattern_lcp = max([count_lcp(pattern, text[sa[idx][1]:]) for idx in range(left, middle)])
+        print(pattern_lcp, lcp[middle])
+        if pattern_lcp > lcp[middle]:
             right = middle
             middle = (left + right) // 2
-        elif pattern_lcp < lcp(middle):
+        elif pattern_lcp < lcp[middle]:
             left = middle
             middle = (left + right) // 2
         else:
-            length = min(len(pattern), len(text[sa[middle]:]))
-            if pattern[:length] > text[sa[middle]:sa[middle]+length]:
+            length = min(len(pattern), len(text[sa[middle][1]:]))
+            if pattern[:length] > text[sa[middle][1]:sa[middle][1]+length]:
                 left = middle
                 middle = (left + right) // 2
-            elif pattern[:length] < text[sa[middle]:sa[middle]+length]:
+            elif pattern[:length] < text[sa[middle][1]:sa[middle][1]+length]:
                 right = middle
                 middle = (left + right) // 2
             else:
@@ -97,16 +99,16 @@ class GenomeClass:
 
         # seq = str(self.data.seq[0:10]) + '$'
         seq = 'parampampam$'
-        start_time = time.time()
+        # start_time = time.time()
         satupes = sorted([(seq[i:], i) for i in range(0, len(seq))])
         suffix_array = list(map(lambda x: x[1], satupes))
         lcp = get_lcp(seq, suffix_array)
         print(seq)
         print(suffix_array)
         print(lcp)
-        print("--- %s seconds ---" % (time.time() - start_time))
+        # print("--- %s seconds ---" % (time.time() - start_time))
         pattern = 'pam'
-        L = 0
+        print(find_pattern(seq, pattern, lcp, satupes))
         # for idx in range(len(self.data.seq) - (min_seq_len + min_distances)):
         #     pass
 
@@ -115,7 +117,7 @@ class GenomeClass:
         # de_novo_last_step
 
 genome = GenomeClass(FILENAME)
-# genome.run()
+genome.run()
 
 # print(genome.__x)
 # self.data[0].seq
