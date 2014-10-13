@@ -38,34 +38,46 @@ def count_lcp(text, pattern):
     return i+1
 
 
-def find_pattern(text, pattern, lcp, sa, output=[], left=0):
+def find_pattern(text, pattern, lcp, sa):
+    left = 0
     right = len(text)
-    middle = len(text)//2
+    middle = (right + left) // 2
+    print('left middle right\n', left, middle, right)
     while True:
-        print(left, middle, right)
-        if middle - left < 2:
-            return output
-        print(sa)
+        if abs(right - left) <= 1:
+            if pattern == text[sa[middle][1]:sa[middle][1] + len(pattern)]:
+                return sa[middle][1], len(pattern)
+            return None
+        # print(sa)
         pattern_lcp = max([count_lcp(pattern, text[sa[idx][1]:]) for idx in range(left, middle)])
-        print(pattern_lcp, lcp[middle])
+        # print('lcp', lcp)
+        # print('sa', sa)
+        # print(pattern_lcp, lcp[middle])
         if pattern_lcp > lcp[middle]:
             right = middle
             middle = (left + right) // 2
+            # print(left, middle, right)
         elif pattern_lcp < lcp[middle]:
             left = middle
             middle = (left + right) // 2
-        else:
-            length = min(len(pattern), len(text[sa[middle][1]:]))
-            if pattern[:length] > text[sa[middle][1]:sa[middle][1]+length]:
+        elif len(pattern) <= len(text[sa[middle][1]:]):
+            if pattern > text[sa[middle][1]:sa[middle][1] + len(pattern)]:
                 left = middle
                 middle = (left + right) // 2
-            elif pattern[:length] < text[sa[middle][1]:sa[middle][1]+length]:
+            elif pattern < text[sa[middle][1]:sa[middle][1] + len(pattern)]:
                 right = middle
                 middle = (left + right) // 2
             else:
-                output.append((middle, len(pattern)))
-                find_pattern(text, pattern, lcp, sa, output, middle + 1)
-
+                return sa[middle][1], len(pattern)
+        else:
+            if pattern[:len(text[sa[middle][1]:])] > text[sa[middle][1]:]:
+                left = middle
+                middle = (left + right) // 2
+            elif pattern[:len(text[sa[middle][1]:])] < text[sa[middle][1]:]:
+                right = middle
+                middle = (left + right) // 2
+            else:
+                return None
 
 
 class GenomeClass:
@@ -99,7 +111,7 @@ class GenomeClass:
         max_distances = 20000
 
         # seq = str(self.data.seq[0:10]) + '$'
-        seq = 'parampampam$'
+        seq = 'kakoe-to soobcheniekakoe-to s$'
         # start_time = time.time()
         satupes = sorted([(seq[i:], i) for i in range(0, len(seq))])
         suffix_array = list(map(lambda x: x[1], satupes))
@@ -108,7 +120,7 @@ class GenomeClass:
         print(suffix_array)
         print(lcp)
         # print("--- %s seconds ---" % (time.time() - start_time))
-        pattern = 'pam'
+        pattern = 'kakoe-to so'
         print(find_pattern(seq, pattern, lcp, satupes))
         # for idx in range(len(self.data.seq) - (min_seq_len + min_distances)):
         #     pass
