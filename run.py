@@ -42,7 +42,7 @@ def find_pattern(text, pattern, lcp, sa):
     left = 0
     right = len(text)
     middle = (right + left) // 2
-    print('left middle right\n', left, middle, right)
+    # print('left middle right\n', left, middle, right)
     while True:
         if abs(right - left) <= 1:
             if pattern == text[sa[middle][1]:sa[middle][1] + len(pattern)]:
@@ -106,25 +106,47 @@ class GenomeClass:
         # for one fasta sequence
 
         # de_novo_first_step(binary searching with LCP array)
-        min_seq_len = 40
-        min_distances = 1000
-        max_distances = 20000
+        min_pattern_len = 40
+        min_distances = 50 # 1000
+        max_distances = 500 # 20000
 
-        # seq = str(self.data.seq[0:10]) + '$'
-        seq = 'kakoe-to soobcheniekakoe-to s$'
-        # start_time = time.time()
-        satupes = sorted([(seq[i:], i) for i in range(0, len(seq))])
-        suffix_array = list(map(lambda x: x[1], satupes))
-        lcp = get_lcp(seq, suffix_array)
-        print(seq)
-        print(suffix_array)
-        print(lcp)
-        # print("--- %s seconds ---" % (time.time() - start_time))
-        pattern = 'kakoe-to so'
-        print(find_pattern(seq, pattern, lcp, satupes))
-        # for idx in range(len(self.data.seq) - (min_seq_len + min_distances)):
-        #     pass
-
+        seq = str(self.data.seq[0:1000])
+        # seq = 'kakoe-to soobcheniekakoe-to s$'
+        start_time = time.time()
+        # print(seq)
+        # print(suffix_array)
+        # print(lcp)
+        output = []
+        for idx in range(len(seq) - (min_pattern_len*2 + min_distances)):
+            pattern = seq[idx:idx + min_pattern_len]
+            text = seq[idx + min_pattern_len + min_distances:]
+            if pattern in text:
+                ans = text.index(pattern)
+            else:
+                ans = None
+            if None != ans:
+                output.append([idx, ans])
+            print(idx, ' из ', len(seq) - (min_pattern_len*2 + min_distances))
+        print("--- %s seconds ---" % (time.time() - start_time))
+        print(output)
+        output = []
+        for idx in range(len(seq) - (min_pattern_len*2 + min_distances)):
+            pattern = seq[idx:idx + min_pattern_len]
+            if idx + min_distances + min_pattern_len < max_distances:
+                text = seq[idx + min_pattern_len + min_distances:]
+                suffix_array = sorted([(text[i:], i) for i in range(0, len(text))])
+                lcp = get_lcp(text, list(map(lambda x: x[1], suffix_array)))
+                ans = find_pattern(text, pattern, lcp, suffix_array)
+            else:
+                text = seq[idx + min_pattern_len + min_distances:idx + min_pattern_len + min_distances + max_distances]
+                suffix_array = sorted([(text[i:], i) for i in range(0, len(text))])
+                lcp = get_lcp(text, list(map(lambda x: x[1], suffix_array)))
+                ans = find_pattern(text, pattern, lcp, suffix_array)
+            if None != ans:
+                output.append([idx, ans])
+            print(idx, ' из ', len(text) - (min_pattern_len*2 + min_distances))
+        print("--- %s seconds ---" % (time.time() - start_time))
+        print(output)
         # de_novo_second_step
 
         # de_novo_last_step
