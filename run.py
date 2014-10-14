@@ -2,6 +2,7 @@ __author__ = 'Eduard Trott'
 
 from Bio import SeqIO
 import time
+import shelve
 
 FILENAME = "Homo sapiens chromosome X genomic scaffold, GRCh38 Primary Assembly HSCHRX_CTG3.fasta"
 
@@ -50,9 +51,7 @@ def find_pattern(text, pattern, lcp, sa):
             return None
         # print(sa)
         pattern_lcp = max([count_lcp(pattern, text[sa[idx][1]:]) for idx in range(left, middle)])
-        # print('lcp', lcp)
-        # print('sa', sa)
-        # print(pattern_lcp, lcp[middle])
+        # lcp comparison
         if pattern_lcp > lcp[middle]:
             right = middle
             middle = (left + right) // 2
@@ -60,6 +59,7 @@ def find_pattern(text, pattern, lcp, sa):
         elif pattern_lcp < lcp[middle]:
             left = middle
             middle = (left + right) // 2
+        # pattern comparison
         elif len(pattern) <= len(text[sa[middle][1]:]):
             if pattern > text[sa[middle][1]:sa[middle][1] + len(pattern)]:
                 left = middle
@@ -96,7 +96,10 @@ class GenomeClass:
         """
 
     def run(self):
-        self.de_novo(self)
+        # self.de_novo(self)
+        db = shelve.open('LCP.db', writeback=True)
+        seq = str(self.data.seq)
+        [print(seq[db['young_lcp'][idx][0]:db['young_lcp'][idx][0]+40], seq[db['young_lcp'][idx][1]:db['young_lcp'][idx][1]+40]) for idx in range(15)]
 
     @staticmethod
     def de_novo(self):
@@ -121,15 +124,14 @@ class GenomeClass:
             pattern = seq[idx:idx + min_pattern_len]
             if not 'N' in pattern:
                 text = seq[idx + min_pattern_len + min_distances:idx + min_pattern_len + min_distances + max_distances]
+                ans = None
                 if pattern in text:
-                    ans = text.index(pattern)
-                else:
-                    ans = None
-                if None != ans:
-                    output.append([idx, ans])
+                    output.append([idx, text.index(pattern) + idx + min_pattern_len + min_distances])
             # print(idx, ' из ', len(seq) - (min_pattern_len*2 + min_distances))
         print("--- %s seconds ---" % (time.time() - start_time))
-        print(output)
+        db = shelve.open('LCP.db', writeback=True)
+        db['young_lcp'] = output
+        db.close()
         ################################################################################################################
         # output = []
         # for idx in range(len(seq) - (min_pattern_len*2 + min_distances)):
