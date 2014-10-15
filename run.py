@@ -157,23 +157,30 @@ class GenomeClass:
         ################################################################################################################
         # de_novo_second_step
         max_ltr_len = 1000
+        min_ltr_len = 100
         db = shelve.open('LCP.db', writeback=True)
+        condition_of_duplicates = False
 
         groups_of_ltrs = [[[db['young_lcp_parts'][0][0], db['young_lcp_parts'][0][0] + min_pattern_len], [db['young_lcp_parts'][0][1], db['young_lcp_parts'][0][1] + min_pattern_len]]]
 
         for lcp_part in db['young_lcp_parts'][1:]:
-            if lcp_part[0] + min_distance < groups_of_ltrs[-1][1][0] and ((lcp_part[0] - groups_of_ltrs[-1][0][1] < max_ltr_len) or (lcp_part[1] - groups_of_ltrs[-1][1][1] < max_ltr_len)):
+            if lcp_part[0] + min_distance < groups_of_ltrs[-1][1][0]:
+                condition_of_duplicates = True
+            elif (lcp_part[0] - groups_of_ltrs[-1][0][1] < max_ltr_len) or (lcp_part[1] - groups_of_ltrs[-1][1][1] < max_ltr_len):
                 groups_of_ltrs[-1][0][1] = lcp_part[0] + min_pattern_len
                 groups_of_ltrs[-1][1][1] = lcp_part[1] + min_pattern_len
             else:
-                groups_of_ltrs.append([[lcp_part[0], lcp_part[0] + min_pattern_len], [lcp_part[1], lcp_part[1] + min_pattern_len]])
+                if condition_of_duplicates or (groups_of_ltrs[-1][0][1] - groups_of_ltrs[-1][0][0] < min_ltr_len) or (groups_of_ltrs[-1][1][1] - groups_of_ltrs[-1][1][0] < min_ltr_len):
+                    groups_of_ltrs[-1] = [[lcp_part[0], lcp_part[0] + min_pattern_len], [lcp_part[1], lcp_part[1] + min_pattern_len]]
+                else:
+                    groups_of_ltrs.append([[lcp_part[0], lcp_part[0] + min_pattern_len], [lcp_part[1], lcp_part[1] + min_pattern_len]])
+                condition_of_duplicates = False
         db['young_lcp'] = groups_of_ltrs
         db.close()
-        # print(seq[groups_of_ltrs[1][0][0]:groups_of_ltrs[1][0][1]], '\n', seq[groups_of_ltrs[1][1][0]:groups_of_ltrs[1][1][1]])
+        print('\n', seq[groups_of_ltrs[1][0][0]:groups_of_ltrs[1][0][1]], '\n', seq[groups_of_ltrs[1][1][0]:groups_of_ltrs[1][1][1]])
 
-        # if the distance is less than 1000 then consider this as a duplicates?
-
-
+        # if the distance is less than 1000 then consider this as a duplicates
+        print(len(groups_of_ltrs))
         # de_novo_last_step
 
 genome = GenomeClass(FILENAME)
