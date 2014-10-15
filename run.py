@@ -180,6 +180,7 @@ class GenomeClass:
         print('\n', seq[groups_of_ltrs[1][0][0]:groups_of_ltrs[1][0][1]], '\n', seq[groups_of_ltrs[1][1][0]:groups_of_ltrs[1][1][1]])
 
         # if the distance is less than 1000 then consider this as a duplicates
+        # !!!! Add condition on LTR retroelements inside another LTRs
         print(len(groups_of_ltrs))
         # de_novo_last_step
 
