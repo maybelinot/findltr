@@ -1,6 +1,7 @@
 __author__ = 'Eduard Trott'
 
-from Bio import SeqIO
+from Bio import SeqIO, Seq, SeqRecord
+from Bio.Alphabet import generic_nucleotide
 import time
 import shelve
 
@@ -178,10 +179,12 @@ class GenomeClass:
         db['young_lcp'] = groups_of_ltrs
         db.close()
         print('\n', seq[groups_of_ltrs[1][0][0]:groups_of_ltrs[1][0][1]], '\n', seq[groups_of_ltrs[1][1][0]:groups_of_ltrs[1][1][1]])
-
+        output_handle = open('ltrs.fasta', "w")
+        records = [SeqRecord.SeqRecord(Seq.Seq(seq[element[0][1]:element[1][0]], generic_nucleotide).translate()) for idx, element in enumerate(groups_of_ltrs)]
+        SeqIO.write(records, output_handle, "fasta")
         # if the distance is less than 1000 then consider this as a duplicates
         # !!!! Add condition on LTR retroelements inside another LTRs
-        print(len(groups_of_ltrs))
+        print(groups_of_ltrs)
         # de_novo_last_step
 
 genome = GenomeClass(FILENAME)
