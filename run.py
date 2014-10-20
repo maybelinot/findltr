@@ -2,6 +2,7 @@ __author__ = 'Eduard Trott'
 
 from Bio import SeqIO, Seq, SeqRecord
 from Bio.Alphabet import generic_nucleotide
+from Bio.Seq import translate
 import time
 import shelve
 
@@ -44,19 +45,16 @@ def find_pattern(text, pattern, lcp, sa):
     left = 0
     right = len(text)
     middle = (right + left) // 2
-    # print('left middle right\n', left, middle, right)
     while True:
         if abs(right - left) <= 1:
             if pattern == text[sa[middle][1]:sa[middle][1] + len(pattern)]:
                 return sa[middle][1], len(pattern)
             return None
-        # print(sa)
         pattern_lcp = max([count_lcp(pattern, text[sa[idx][1]:]) for idx in range(left, middle)])
         # lcp comparison
         if pattern_lcp > lcp[middle]:
             right = middle
             middle = (left + right) // 2
-            # print(left, middle, right)
         elif pattern_lcp < lcp[middle]:
             left = middle
             middle = (left + right) // 2
@@ -97,21 +95,13 @@ class GenomeClass:
         """
 
     def run(self):
-        self.de_novo(self)
-        # db = shelve.open('LCP.db', writeback=True)
-        # seq = str(self.data.seq)
-        # [print(seq[db['young_lcp'][idx][0]:db['young_lcp'][idx][0]+40], seq[db['young_lcp'][idx][1]:db['young_lcp'][idx][1]+40]) for idx in range(15)]
-        # print(len(db['young_lcp']))
-        # db.close()
+        self.de_novo()
 
-    @staticmethod
     def de_novo(self):
         """
         De novo identification of young intact LTR retroelements
         """
-        # for one fasta sequence
 
-        # de_novo_first_step(binary searching with LCP array)
         min_pattern_len = 40
         min_distance = 1000
         max_distance = 20000
@@ -137,6 +127,7 @@ class GenomeClass:
         # db.close()
 
         ################################################################################################################
+        # de_novo_first_step(binary searching with LCP array)
         # output = []
         # for idx in range(len(seq) - (min_pattern_len*2 + min_distances)):
         #     pattern = seq[idx:idx + min_pattern_len]
@@ -156,31 +147,37 @@ class GenomeClass:
         # print("--- %s seconds ---" % (time.time() - start_time))
         # print(output)
         ################################################################################################################
+
         # de_novo_second_step
         max_ltr_len = 1000
         min_ltr_len = 100
         db = shelve.open('LCP.db', writeback=True)
         condition_of_duplicates = False
 
-        groups_of_ltrs = [[[db['young_lcp_parts'][0][0], db['young_lcp_parts'][0][0] + min_pattern_len], [db['young_lcp_parts'][0][1], db['young_lcp_parts'][0][1] + min_pattern_len]]]
+        groups_of_ltrs = [[[db['young_lcp_parts'][0][0], db['young_lcp_parts'][0][0] + min_pattern_len],
+                           [db['young_lcp_parts'][0][1], db['young_lcp_parts'][0][1] + min_pattern_len]]]
 
         for lcp_part in db['young_lcp_parts'][1:]:
             if lcp_part[0] + min_distance < groups_of_ltrs[-1][1][0]:
                 condition_of_duplicates = True
-            elif (lcp_part[0] - groups_of_ltrs[-1][0][1] < max_ltr_len) or (lcp_part[1] - groups_of_ltrs[-1][1][1] < max_ltr_len):
+            elif (lcp_part[0] - groups_of_ltrs[-1][0][1] < max_ltr_len) or \
+                    (lcp_part[1] - groups_of_ltrs[-1][1][1] < max_ltr_len):
                 groups_of_ltrs[-1][0][1] = lcp_part[0] + min_pattern_len
                 groups_of_ltrs[-1][1][1] = lcp_part[1] + min_pattern_len
             else:
-                if condition_of_duplicates or (groups_of_ltrs[-1][0][1] - groups_of_ltrs[-1][0][0] < min_ltr_len) or (groups_of_ltrs[-1][1][1] - groups_of_ltrs[-1][1][0] < min_ltr_len):
-                    groups_of_ltrs[-1] = [[lcp_part[0], lcp_part[0] + min_pattern_len], [lcp_part[1], lcp_part[1] + min_pattern_len]]
+                if condition_of_duplicates or (groups_of_ltrs[-1][0][1] - groups_of_ltrs[-1][0][0] < min_ltr_len) or \
+                        (groups_of_ltrs[-1][1][1] - groups_of_ltrs[-1][1][0] < min_ltr_len):
+                    groups_of_ltrs[-1] = [[lcp_part[0], lcp_part[0] + min_pattern_len],
+                                          [lcp_part[1], lcp_part[1] + min_pattern_len]]
                 else:
-                    groups_of_ltrs.append([[lcp_part[0], lcp_part[0] + min_pattern_len], [lcp_part[1], lcp_part[1] + min_pattern_len]])
+                    groups_of_ltrs.append([[lcp_part[0], lcp_part[0] + min_pattern_len],
+                                           [lcp_part[1], lcp_part[1] + min_pattern_len]])
                 condition_of_duplicates = False
         db['young_lcp'] = groups_of_ltrs
         db.close()
-        print('\n', seq[groups_of_ltrs[1][0][0]:groups_of_ltrs[1][0][1]], '\n', seq[groups_of_ltrs[1][1][0]:groups_of_ltrs[1][1][1]])
         output_handle = open('ltrs.fasta', "w")
-        records = [SeqRecord.SeqRecord(Seq.Seq(seq[element[0][1]:element[1][0]], generic_nucleotide).translate()) for idx, element in enumerate(groups_of_ltrs)]
+        records = [SeqRecord.SeqRecord(translate(Seq.Seq(seq[element[0][1]:element[1][0]][2:], generic_nucleotide)))
+                   for idx, element in enumerate(groups_of_ltrs)]
         SeqIO.write(records, output_handle, "fasta")
         # if the distance is less than 1000 then consider this as a duplicates
         # !!!! Add condition on LTR retroelements inside another LTRs
