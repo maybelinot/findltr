@@ -11,8 +11,8 @@ FILENAME = "Homo sapiens chromosome X genomic scaffold, GRCh38 Primary Assembly 
 
 
 def get_lcp(text, suffix_array):
-    lcp = [0]*len(suffix_array)
-    rank = [0]*len(suffix_array)
+    lcp = [0] * len(suffix_array)
+    rank = [0] * len(suffix_array)
     n = len(suffix_array)
     for idx in range(n):
         rank[suffix_array[idx]] = idx
@@ -22,8 +22,8 @@ def get_lcp(text, suffix_array):
         if k == 0:
             lcp[k] = -1
         else:
-            j = suffix_array[k-1]
-            while idx+h < n and j+h < n and text[idx+h] == text[j+h]:
+            j = suffix_array[k - 1]
+            while idx + h < n and j + h < n and text[idx + h] == text[j + h]:
                 h += 1
             lcp[k] = h
         if h > 0:
@@ -39,7 +39,7 @@ def count_lcp(text, pattern):
         if text[i] != pattern[i]:
             i -= 1
             break
-    return i+1
+    return i + 1
 
 
 def find_pattern(text, pattern, lcp, sa):
@@ -84,6 +84,7 @@ class GenomeClass:
     """
     Class to represent genome
     """
+
     def __init__(self, filename):
         handle = open(filename, "rU")
         self.data = next(SeqIO.parse(handle, "fasta"))
@@ -108,49 +109,54 @@ class GenomeClass:
         max_distance = 20000
 
         seq = str(self.data.seq)
-        start_time = time.time()
-        output = []
-        idx = 0
-        while idx < len(seq) - (min_pattern_len*2 + min_distance):
-            pattern = seq[idx:idx + min_pattern_len]
-            if not 'N' in pattern:
-                text = seq[idx + min_pattern_len + min_distance:idx + min_pattern_len + min_distance + max_distance]
-                ans = None
-                if pattern in text:
-                    idx += min_pattern_len
-                    output.append([idx, text.index(pattern) + idx + min_pattern_len + min_distance])
-            idx += 1
-        print("--- %s seconds ---" % (time.time() - start_time))
-        db = shelve.open('LCP.db', writeback=True)
-        # db = [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
-        # and distance between patterns is in range (min_distance : max_distance)
-        db['young_lcp_parts'] = output
-        db.close()
-
-        ################################################################################################################
-        # de_novo_first_step(binary searching with LCP array)
+        # start_time = time.time()
         # output = []
-        # for idx in range(len(seq) - (min_pattern_len*2 + min_distances)):
+        # idx = 0
+        # while idx < len(seq) - (min_pattern_len * 2 + min_distance):
         #     pattern = seq[idx:idx + min_pattern_len]
-        #     if idx + min_distances + min_pattern_len < max_distances:
-        #         text = seq[idx + min_pattern_len + min_distances:]
+        #     if not 'N' in pattern:
+        #         text = seq[idx + min_pattern_len + min_distance:idx + min_pattern_len + min_distance + max_distance]
+        #         ans = None
+        #         if pattern in text:
+        #             idx += min_pattern_len
+        #             output.append([idx, text.index(pattern) + idx + min_pattern_len + min_distance])
+        #     else:
+        #         idx += min_pattern_len
+        #     idx += 1
+        # print("--- %s seconds ---" % (time.time() - start_time))
+        # db = shelve.open('LCP.db', writeback=True)
+        # # db = [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
+        # # and distance between patterns is in range (min_distance : max_distance)
+        # db['young_lcp_parts'] = output
+        # db.close()
+
+        # ###############################################################################################################
+        # de_novo_first_step(binary searching with LCP array)
+        # start_time = time.time()
+        # output = []
+        # for idx in range(len(seq) - (min_pattern_len*2 + min_distance)):
+        #     pattern = seq[idx:idx + min_pattern_len]
+        #     if idx + min_distance + min_pattern_len < min_distance:
+        #         text = seq[idx + min_pattern_len + min_distance:]
         #         suffix_array = sorted([(text[i:], i) for i in range(0, len(text))])
         #         lcp = get_lcp(text, list(map(lambda x: x[1], suffix_array)))
         #         ans = find_pattern(text, pattern, lcp, suffix_array)
         #     else:
-        #         text = seq[idx + min_pattern_len + min_distances:idx + min_pattern_len + min_distances + max_distances]
+        #         text = seq[idx + min_pattern_len + min_distance:idx + min_pattern_len + min_distance + min_distance]
         #         suffix_array = sorted([(text[i:], i) for i in range(0, len(text))])
         #         lcp = get_lcp(text, list(map(lambda x: x[1], suffix_array)))
         #         ans = find_pattern(text, pattern, lcp, suffix_array)
         #     if None != ans:
         #         output.append([idx, ans])
-        #     print(idx, ' из ', len(text) - (min_pattern_len*2 + min_distances))
+        #     print(idx, ' из ', len(text) - (min_pattern_len*2 + min_distance))
         # print("--- %s seconds ---" % (time.time() - start_time))
         # print(output)
         ################################################################################################################
 
         # de_novo_second_step
-        # Add screening by the trailing sequences of LTR
+        # !!!!! Add screening by the trailing sequences of LTR
+        # !!!!! Add 80% compare to forming LTR groups (search some biopython tool)
+
         max_ltr_len = 1000
         min_ltr_len = 100
         db = shelve.open('LCP.db', writeback=True)
@@ -162,13 +168,15 @@ class GenomeClass:
         for lcp_part in db['young_lcp_parts'][1:]:
             if lcp_part[0] + min_pattern_len + min_distance > groups_of_ltrs[-1][1][0]:
                 if lcp_part[0] > groups_of_ltrs[-1][1][1]:
-                    if duplicates:
+                    if duplicates \
+                            or (groups_of_ltrs[-1][0][1] - groups_of_ltrs[-1][0][0]) < min_ltr_len \
+                            or (groups_of_ltrs[-1][1][1] - groups_of_ltrs[-1][1][0]) < min_ltr_len:
                         groups_of_ltrs[-1] = [[lcp_part[0], lcp_part[0] + min_pattern_len],
                                               [lcp_part[1], lcp_part[1] + min_pattern_len]]
                         duplicates = False
                     else:
                         groups_of_ltrs.append([[lcp_part[0], lcp_part[0] + min_pattern_len],
-                                              [lcp_part[1], lcp_part[1] + min_pattern_len]])
+                                               [lcp_part[1], lcp_part[1] + min_pattern_len]])
                 else:
                     duplicates = True
             elif (lcp_part[0] - groups_of_ltrs[-1][0][0] < max_ltr_len) or \
@@ -177,19 +185,28 @@ class GenomeClass:
                 groups_of_ltrs[-1][1][1] = lcp_part[1] + min_pattern_len
             else:
                 duplicates = True
+        if duplicates or (groups_of_ltrs[-1][0][1] - groups_of_ltrs[-1][0][0]) < min_ltr_len \
+                or min_ltr_len > (groups_of_ltrs[-1][1][1] - groups_of_ltrs[-1][1][0]):
+            del groups_of_ltrs[-1]
 
         db['young_lcp'] = groups_of_ltrs
         db.close()
-        output_handle = open('ltrs.fasta', "w")
+
+        # creation of sequences records
         records = []
         for idx, element in enumerate(groups_of_ltrs):
-            records.append(SeqRecord.SeqRecord(Seq(seq[element[0][1]:element[1][0]], generic_nucleotide).translate(), id=str(idx)))
-        SeqIO.write(records, output_handle, "fasta")
+            records.append(SeqRecord.SeqRecord(Seq(seq[element[0][1]:element[1][0]], generic_nucleotide).translate(),
+                                               id=str(idx)))
 
-        # if the distance is less than 1000 then consider this as a duplicates
+        # writing records to file
+        with open('ltrs.fasta', "w") as output_handle:
+            SeqIO.write(records, output_handle, "fasta")
+
+        # if the distance is less than 1000 then consider this seq as a duplicates
         # !!!! Add condition on LTR retroelements inside another LTRs
-        print(len(groups_of_ltrs))
+        print(groups_of_ltrs)
         # de_novo_last_step
+
 
 genome = GenomeClass(FILENAME)
 genome.run()
