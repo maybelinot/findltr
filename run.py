@@ -1,3 +1,4 @@
+from __future__ import generators
 __author__ = 'Eduard Trott'
 
 from Bio import SeqIO, Seq, SeqRecord
@@ -79,6 +80,41 @@ def find_pattern(text, pattern, lcp, sa):
             else:
                 return None
 
+# Knuth-Morris-Pratt string matching
+# David Eppstein, UC Irvine, 1 Mar 2002
+
+
+def KnuthMorrisPratt(text, pattern):
+
+    '''Yields all starting positions of copies of the pattern in the text.
+Calling conventions are similar to string.find, but its arguments can be
+lists or iterators, not just strings, it returns all matches, not just
+the first one, and it does not need the whole text in memory at once.
+Whenever it yields, it will have read the text exactly up to and including
+the match that caused the yield.'''
+
+    # allow indexing into pattern and protect against change during yield
+    pattern = list(pattern)
+
+    # build table of shift amounts
+    shifts = [1] * (len(pattern) + 1)
+    shift = 1
+    for pos in range(len(pattern)):
+        while shift <= pos and pattern[pos] != pattern[pos-shift]:
+            shift += shifts[pos-shift]
+        shifts[pos+1] = shift
+
+    # do the actual search
+    startPos = 0
+    matchLen = 0
+    for c in text:
+        while matchLen == len(pattern) or \
+              matchLen >= 0 and pattern[matchLen] != c:
+            startPos += shifts[matchLen]
+            matchLen -= shifts[matchLen]
+        matchLen += 1
+        if matchLen == len(pattern):
+            yield startPos
 
 class GenomeClass:
     """
@@ -109,25 +145,27 @@ class GenomeClass:
         max_distance = 20000
 
         seq = str(self.data.seq)
-        # start_time = time.time()
-        # output = []
-        # idx = 0
-        # while idx < len(seq) - (min_pattern_len * 2 + min_distance):
-        #     pattern = seq[idx:idx + min_pattern_len]
-        #     if not 'N' in pattern:
-        #         text = seq[idx + min_pattern_len + min_distance:idx + min_pattern_len + min_distance + max_distance]
-        #         ans = None
-        #         if pattern in text:
-        #             idx += min_pattern_len
-        #             output.append([idx, text.index(pattern) + idx + min_pattern_len + min_distance])
-        #     else:
-        #         idx += min_pattern_len
-        #     idx += 1
-        # print("--- %s seconds ---" % (time.time() - start_time))
-        # db = shelve.open('LCP.db', writeback=True)
-        # # db = [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
-        # # and distance between patterns is in range (min_distance : max_distance)
-        # db['young_lcp_parts'] = output
+        start_time = time.time()
+        output = []
+        idx = 0
+        while idx < len(seq) - (min_pattern_len * 2 + min_distance):
+            pattern = seq[idx:idx + min_pattern_len]
+            if not 'N' in pattern:
+                text = seq[idx + min_pattern_len + min_distance:idx + min_pattern_len + min_distance + max_distance]
+                if pattern in text:
+                    idx += min_pattern_len
+                    output.append([idx, text.index(pattern) + idx + min_pattern_len + min_distance])
+            else:
+                idx += min_pattern_len
+            idx += 1
+        print("--- %s seconds ---" % (time.time() - start_time))
+        db = shelve.open('LCP.db', writeback=True)
+        # db = [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
+        # and distance between patterns is in range (min_distance : max_distance)
+        db['young_lcp_parts'] = output
+        print(db['time'])
+        # kmp, original, lcpsa
+        # strings = 100 1000 10k 100k
         # db.close()
 
         # ###############################################################################################################
@@ -150,6 +188,9 @@ class GenomeClass:
         #         output.append([idx, ans])
         #     print(idx, ' из ', len(text) - (min_pattern_len*2 + min_distance))
         # print("--- %s seconds ---" % (time.time() - start_time))
+        #
+        # db['time']['lcpsa'].append(time.time() - start_time)
+        # db.close()
         # print(output)
         ################################################################################################################
 
@@ -168,9 +209,9 @@ class GenomeClass:
         for lcp_part in db['young_lcp_parts'][1:]:
             if lcp_part[0] + min_pattern_len + min_distance > groups_of_ltrs[-1][1][0]:
                 if lcp_part[0] > groups_of_ltrs[-1][1][1]:
-                    if duplicates \
-                            or (groups_of_ltrs[-1][0][1] - groups_of_ltrs[-1][0][0]) < min_ltr_len \
-                            or (groups_of_ltrs[-1][1][1] - groups_of_ltrs[-1][1][0]) < min_ltr_len:
+                    if duplicates:
+                            # or (groups_of_ltrs[-1][0][1] - groups_of_ltrs[-1][0][0]) < min_ltr_len \
+                            # or (groups_of_ltrs[-1][1][1] - groups_of_ltrs[-1][1][0]) < min_ltr_len:
                         groups_of_ltrs[-1] = [[lcp_part[0], lcp_part[0] + min_pattern_len],
                                               [lcp_part[1], lcp_part[1] + min_pattern_len]]
                         duplicates = False
@@ -204,7 +245,7 @@ class GenomeClass:
 
         # if the distance is less than 1000 then consider this seq as a duplicates
         # !!!! Add condition on LTR retroelements inside another LTRs
-        print(groups_of_ltrs)
+        [print(el, '\n') for el in groups_of_ltrs]
         # de_novo_last_step
 
 
