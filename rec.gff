@@ -1,0 +1,129 @@
+##gff-version 3
+##sequence-region 0 1 1176
+0	prediction	retroelement	7578	8753	.	+	.	ID=retroelement_0;other=Some,annotations
+0	prediction	leading_LTR	7578	7668	.	+	.	Parent=retroelement_0
+0	prediction	trailing_LTR	8695	8753	.	+	.	Parent=retroelement_0
+##sequence-region 1 1 10908
+1	prediction	retroelement	112833	123740	.	+	.	ID=retroelement_1;other=Some,annotations
+1	prediction	leading_LTR	112833	122337	.	+	.	Parent=retroelement_1
+1	prediction	trailing_LTR	123686	123740	.	+	.	Parent=retroelement_1
+##sequence-region 2 1 7834
+2	prediction	retroelement	257050	264883	.	+	.	ID=retroelement_2;other=Some,annotations
+2	prediction	leading_LTR	257050	263805	.	+	.	Parent=retroelement_2
+2	prediction	trailing_LTR	268466	264883	.	+	.	Parent=retroelement_2
+##sequence-region 3 1 2223
+3	prediction	retroelement	273975	276197	.	+	.	ID=retroelement_3;other=Some,annotations
+3	prediction	leading_LTR	273975	274014	.	+	.	Parent=retroelement_3
+3	prediction	trailing_LTR	276158	276197	.	+	.	Parent=retroelement_3
+##sequence-region 4 1 4095
+4	prediction	retroelement	280145	284239	.	+	.	ID=retroelement_4;other=Some,annotations
+4	prediction	leading_LTR	280145	280184	.	+	.	Parent=retroelement_4
+4	prediction	trailing_LTR	284200	284239	.	+	.	Parent=retroelement_4
+##sequence-region 5 1 2543
+5	prediction	retroelement	314757	317299	.	+	.	ID=retroelement_5;other=Some,annotations
+5	prediction	leading_LTR	314757	314796	.	+	.	Parent=retroelement_5
+5	prediction	trailing_LTR	317260	317299	.	+	.	Parent=retroelement_5
+##sequence-region 6 1 2480
+6	prediction	retroelement	317555	320034	.	+	.	ID=retroelement_6;other=Some,annotations
+6	prediction	leading_LTR	317555	317594	.	+	.	Parent=retroelement_6
+6	prediction	trailing_LTR	319995	320034	.	+	.	Parent=retroelement_6
+##sequence-region 7 1 5313
+7	prediction	retroelement	444004	449316	.	+	.	ID=retroelement_7;other=Some,annotations
+7	prediction	leading_LTR	444004	448110	.	+	.	Parent=retroelement_7
+7	prediction	trailing_LTR	453445	449316	.	+	.	Parent=retroelement_7
+##sequence-region 8 1 12398
+8	prediction	retroelement	468482	480879	.	+	.	ID=retroelement_8;other=Some,annotations
+8	prediction	leading_LTR	468482	468521	.	+	.	Parent=retroelement_8
+8	prediction	trailing_LTR	480840	480879	.	+	.	Parent=retroelement_8
+##sequence-region 9 1 3489
+9	prediction	retroelement	488047	491535	.	+	.	ID=retroelement_9;other=Some,annotations
+9	prediction	leading_LTR	488047	489016	.	+	.	Parent=retroelement_9
+9	prediction	trailing_LTR	490776	491535	.	+	.	Parent=retroelement_9
+##sequence-region 10 1 7478
+10	prediction	retroelement	543502	550979	.	+	.	ID=retroelement_10;other=Some,annotations
+10	prediction	leading_LTR	543502	543541	.	+	.	Parent=retroelement_10
+10	prediction	trailing_LTR	550940	550979	.	+	.	Parent=retroelement_10
+##sequence-region 11 1 3423
+11	prediction	retroelement	568083	571505	.	+	.	ID=retroelement_11;other=Some,annotations
+11	prediction	leading_LTR	568083	568122	.	+	.	Parent=retroelement_11
+11	prediction	trailing_LTR	571466	571505	.	+	.	Parent=retroelement_11
+##sequence-region 12 1 6237
+12	prediction	retroelement	596639	602875	.	+	.	ID=retroelement_12;other=Some,annotations
+12	prediction	leading_LTR	596639	601363	.	+	.	Parent=retroelement_12
+12	prediction	trailing_LTR	607188	602875	.	+	.	Parent=retroelement_12
+##sequence-region 13 1 9799
+13	prediction	retroelement	607224	617022	.	+	.	ID=retroelement_13;other=Some,annotations
+13	prediction	leading_LTR	607224	615755	.	+	.	Parent=retroelement_13
+13	prediction	trailing_LTR	621726	617022	.	+	.	Parent=retroelement_13
+##sequence-region 14 1 6447
+14	prediction	retroelement	683333	689779	.	+	.	ID=retroelement_14;other=Some,annotations
+14	prediction	leading_LTR	683333	686585	.	+	.	Parent=retroelement_14
+14	prediction	trailing_LTR	689729	689779	.	+	.	Parent=retroelement_14
+##sequence-region 15 1 16405
+15	prediction	retroelement	699393	715797	.	+	.	ID=retroelement_15;other=Some,annotations
+15	prediction	leading_LTR	699393	699432	.	+	.	Parent=retroelement_15
+15	prediction	trailing_LTR	715758	715797	.	+	.	Parent=retroelement_15
+##sequence-region 16 1 1908
+16	prediction	retroelement	727121	729028	.	+	.	ID=retroelement_16;other=Some,annotations
+16	prediction	leading_LTR	727121	727160	.	+	.	Parent=retroelement_16
+16	prediction	trailing_LTR	728989	729028	.	+	.	Parent=retroelement_16
+##sequence-region 17 1 8206
+17	prediction	retroelement	762882	771087	.	+	.	ID=retroelement_17;other=Some,annotations
+17	prediction	leading_LTR	762882	770011	.	+	.	Parent=retroelement_17
+17	prediction	trailing_LTR	772958	771087	.	+	.	Parent=retroelement_17
+##sequence-region 18 1 1193
+18	prediction	retroelement	853750	854942	.	+	.	ID=retroelement_18;other=Some,annotations
+18	prediction	leading_LTR	853750	853830	.	+	.	Parent=retroelement_18
+18	prediction	trailing_LTR	854862	854942	.	+	.	Parent=retroelement_18
+##sequence-region 19 1 1962
+19	prediction	retroelement	874896	876857	.	+	.	ID=retroelement_19;other=Some,annotations
+19	prediction	leading_LTR	874896	874935	.	+	.	Parent=retroelement_19
+19	prediction	trailing_LTR	876818	876857	.	+	.	Parent=retroelement_19
+##sequence-region 20 1 15591
+20	prediction	retroelement	878159	893749	.	+	.	ID=retroelement_20;other=Some,annotations
+20	prediction	leading_LTR	878159	888625	.	+	.	Parent=retroelement_20
+20	prediction	trailing_LTR	894258	893749	.	+	.	Parent=retroelement_20
+##sequence-region 21 1 6854
+21	prediction	retroelement	947905	954758	.	+	.	ID=retroelement_21;other=Some,annotations
+21	prediction	leading_LTR	947905	947944	.	+	.	Parent=retroelement_21
+21	prediction	trailing_LTR	954719	954758	.	+	.	Parent=retroelement_21
+##sequence-region 22 1 11242
+22	prediction	retroelement	957905	969146	.	+	.	ID=retroelement_22;other=Some,annotations
+22	prediction	leading_LTR	957905	957944	.	+	.	Parent=retroelement_22
+22	prediction	trailing_LTR	969107	969146	.	+	.	Parent=retroelement_22
+##sequence-region 23 1 3646
+23	prediction	retroelement	1354061	1357706	.	+	.	ID=retroelement_23;other=Some,annotations
+23	prediction	leading_LTR	1354061	1356635	.	+	.	Parent=retroelement_23
+23	prediction	trailing_LTR	1358132	1357706	.	+	.	Parent=retroelement_23
+##sequence-region 24 1 1340
+24	prediction	retroelement	1462610	1463949	.	+	.	ID=retroelement_24;other=Some,annotations
+24	prediction	leading_LTR	1462610	1462853	.	+	.	Parent=retroelement_24
+24	prediction	trailing_LTR	1464116	1463949	.	+	.	Parent=retroelement_24
+##sequence-region 25 1 3900
+25	prediction	retroelement	1575025	1578924	.	+	.	ID=retroelement_25;other=Some,annotations
+25	prediction	leading_LTR	1575025	1577842	.	+	.	Parent=retroelement_25
+25	prediction	trailing_LTR	1593845	1578924	.	+	.	Parent=retroelement_25
+##sequence-region 26 1 8554
+26	prediction	retroelement	1623741	1632294	.	+	.	ID=retroelement_26;other=Some,annotations
+26	prediction	leading_LTR	1623741	1631219	.	+	.	Parent=retroelement_26
+26	prediction	trailing_LTR	1635503	1632294	.	+	.	Parent=retroelement_26
+##sequence-region 27 1 11237
+27	prediction	retroelement	1799140	1810376	.	+	.	ID=retroelement_27;other=Some,annotations
+27	prediction	leading_LTR	1799140	1809277	.	+	.	Parent=retroelement_27
+27	prediction	trailing_LTR	1810965	1810376	.	+	.	Parent=retroelement_27
+##sequence-region 28 1 2024
+28	prediction	retroelement	1841310	1843333	.	+	.	ID=retroelement_28;other=Some,annotations
+28	prediction	leading_LTR	1841310	1841349	.	+	.	Parent=retroelement_28
+28	prediction	trailing_LTR	1843294	1843333	.	+	.	Parent=retroelement_28
+##sequence-region 29 1 1475
+29	prediction	retroelement	1850559	1852033	.	+	.	ID=retroelement_29;other=Some,annotations
+29	prediction	leading_LTR	1850559	1850598	.	+	.	Parent=retroelement_29
+29	prediction	trailing_LTR	1851994	1852033	.	+	.	Parent=retroelement_29
+##sequence-region 30 1 3213
+30	prediction	retroelement	1862265	1865477	.	+	.	ID=retroelement_30;other=Some,annotations
+30	prediction	leading_LTR	1862265	1862304	.	+	.	Parent=retroelement_30
+30	prediction	trailing_LTR	1865438	1865477	.	+	.	Parent=retroelement_30
+##sequence-region 31 1 5521
+31	prediction	retroelement	1883353	1888873	.	+	.	ID=retroelement_31;other=Some,annotations
+31	prediction	leading_LTR	1883353	1883392	.	+	.	Parent=retroelement_31
+31	prediction	trailing_LTR	1888834	1888873	.	+	.	Parent=retroelement_31
