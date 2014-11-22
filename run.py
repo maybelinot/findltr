@@ -3,13 +3,12 @@ __author__ = 'Eduard Trott'
 
 from Bio import SeqIO, Seq, SeqRecord, SeqFeature
 from Bio.Alphabet import generic_nucleotide
-from Bio.Seq import Seq
 from Bio.Seq import translate
 from BCBio import GFF
 import time
 import shelve
 
-FILENAME = "Homo sapiens chromosome X genomic scaffold, GRCh38 Primary Assembly HSCHRX_CTG3.fasta"
+FILENAME = "chrX.fa"
 
 
 def get_lcp(text, suffix_array):
@@ -145,32 +144,32 @@ class GenomeClass:
         min_distance = 1000
         max_distance = 20000
 
-        seq = str(self.data.seq)
-        # start_time = time.time()
-        # output = []
-        # idx = 0
-        # while idx < len(seq) - (min_pattern_len * 2 + min_distance):
-        #     pattern = seq[idx:idx + min_pattern_len]
-        #     if not 'N' in pattern:
-        #         text = seq[idx + min_pattern_len + min_distance:idx + min_pattern_len + min_distance + max_distance]
-        #         # ans = [el for el in KnuthMorrisPratt(text, pattern)]
-        #         # if ans:
-        #         #     output.append([idx, ans[0] + idx + min_pattern_len + min_distance])
-        #         #     idx += min_pattern_len
-        #         if pattern in text:
-        #             output.append([idx, text.index(pattern) + idx + min_pattern_len + min_distance])
-        #             idx += min_pattern_len
-        #     else:
-        #         idx += min_pattern_len
-        #     idx += 1
-        # print("--- %s seconds ---" % (time.time() - start_time))
-        # db = shelve.open('LCP.db', writeback=True)
-        # # db = [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
-        # # and distance between patterns is in range (min_distance : max_distance)
-        # db['young_lcp_parts'] = output
-        # print(output)
-        # print(db['young_lcp_parts'])
-        # db.close()
+        seq = str(self.data.seq).upper()
+        start_time = time.time()
+        output = []
+        idx = 0
+        while idx < len(seq) - (min_pattern_len * 2 + min_distance):
+            pattern = seq[idx:idx + min_pattern_len]
+            if not 'N' in pattern:
+                text = seq[idx + min_pattern_len + min_distance:idx + min_pattern_len + min_distance + max_distance]
+                # ans = [el for el in KnuthMorrisPratt(text, pattern)]
+                # if ans:
+                #     output.append([idx, ans[0] + idx + min_pattern_len + min_distance])
+                #     idx += min_pattern_len
+                if pattern in text:
+                    output.append([idx, text.index(pattern) + idx + min_pattern_len + min_distance])
+                    idx += min_pattern_len
+            else:
+                idx += min_pattern_len
+            idx += 1
+        print("--- %s seconds ---" % (time.time() - start_time))
+        db = shelve.open('LCP.db', writeback=True)
+        # db = [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
+        # and distance between patterns is in range (min_distance : max_distance)
+        db['young_lcp_parts'] = output
+        print(output)
+        print(db['young_lcp_parts'])
+        db.close()
 
         # ###############################################################################################################
         # de_novo_first_step(binary searching with LCP array)
@@ -237,39 +236,29 @@ class GenomeClass:
         db.close()
 
         # creation of sequences records
+        db = shelve.open('LCP.db', writeback=True)
         records = []
-        for idx, element in enumerate(groups_of_ltrs):
-            records.append(SeqRecord.SeqRecord(Seq(seq[element[0][1]:element[1][0]], generic_nucleotide).translate(),
-                                               id=str(idx)))
+        # for idx, element in enumerate(db['young_lcp']):
+        #     records.append(SeqRecord.SeqRecord(Seq(seq[element[0][1]:element[1][0]], generic_nucleotide).translate(),
+        #                                        id=str(idx)))
 
-        # writing records to file
-        with open('ltrs.fasta', "w") as out_handle:
-            SeqIO.write(records, out_handle, "fasta")
-
-        gff = []
-        for idx, item in enumerate(groups_of_ltrs):
-            rec = SeqRecord.SeqRecord(Seq(seq[item[0][0]:item[1][1]]), id=str(idx))
-            qualifiers = {"source": "prediction", "other": ["Some", "annotations"],
-                          "ID": "retroelement_"+str(idx)}
-            top_feature = SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0], item[1][1]), type="retroelement", strand=1,
-                         qualifiers=qualifiers)
-            sub_qualifiers = {"source": "prediction"}
-            top_feature.sub_features = [SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0], item[0][1]),
-                                                              type="leading_LTR", strand=1, qualifiers=sub_qualifiers),
-                                        SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[1][0], item[1][1]),
-                                                              type="trailing_LTR", strand=1, qualifiers=sub_qualifiers)]
-            rec.features = [top_feature]
-            gff.append(rec)
-
-        # print(gff)
+        gff = SeqRecord.SeqRecord(Seq.Seq(seq), "chrX")
+        top_feature = []
+        for idx, item in enumerate(db['young_lcp']):
+            sub_qualifiers = {"source": "ltrfind", "ID": "UnknownLTR_"+str(idx+1)}
+            top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0], item[1][1]),
+                            type="SO:0000186", strand=1, qualifiers=sub_qualifiers))
+        gff.features = top_feature
 
         with open('rec.gff', "w") as out_handle:
-            GFF.write(gff, out_handle)
+            GFF.write([gff], out_handle)
 
 
         # if the distance is less than 1000 then consider this seq as a duplicates
         # !!!! Add condition on LTR retroelements inside another LTRs
-        [print(el, '\n') for el in groups_of_ltrs]
+
+        # [print(el, '\n') for el in groups_of_ltrs]
+
         # de_novo_last_step
 
 
