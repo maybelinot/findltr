@@ -2,12 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11d47594-4bbd-462b-92b3-d14731ef110f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/LCP.db.dat" afterPath="$PROJECT_DIR$/LCP.db.dat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/LCP.db.bak" afterPath="$PROJECT_DIR$/LCP.db.bak" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/LCP.db.dir" afterPath="$PROJECT_DIR$/LCP.db.dir" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ltrs.fasta" afterPath="$PROJECT_DIR$/ltrs.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rec.gff" afterPath="$PROJECT_DIR$/rec.gff" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/run.py" afterPath="$PROJECT_DIR$/run.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="VUT_project.iws" />
@@ -34,8 +28,8 @@
       <file leaf-file-name="run.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/run.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6651446" vertical-offset="3847" max-vertical-offset="4641">
-              <caret line="252" column="48" selection-start-line="252" selection-start-column="48" selection-end-line="252" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.49588138" vertical-offset="4170" max-vertical-offset="4981">
+              <caret line="263" column="40" selection-start-line="263" selection-start-column="40" selection-end-line="263" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -101,8 +95,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -486,14 +480,26 @@
       <created>1416435593501</created>
       <updated>1416435593501</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="chrX running">
+      <created>1416664291854</created>
+      <updated>1416664291854</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Identity alignment">
+      <created>1417730980229</created>
+      <updated>1417730980229</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Identity alignment">
+      <created>1417731135745</created>
+      <updated>1417731135745</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284055" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32755905" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913387" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -501,7 +507,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39915523" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913387" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27666315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28503937" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -565,7 +571,9 @@
     <MESSAGE value="some not important changes" />
     <MESSAGE value="time comparison for kmp, lcp-sa and original algorithms" />
     <MESSAGE value="GFF writing &#10;creation of SeqRecord" />
-    <option name="LAST_COMMIT_MESSAGE" value="GFF writing &#10;creation of SeqRecord" />
+    <MESSAGE value="chrX running" />
+    <MESSAGE value="Identity alignment" />
+    <option name="LAST_COMMIT_MESSAGE" value="Identity alignment" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -965,14 +973,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.6133943" vertical-offset="2794" max-vertical-offset="3451">
           <caret line="104" column="0" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/run.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6651446" vertical-offset="3847" max-vertical-offset="4641">
-          <caret line="252" column="48" selection-start-line="252" selection-start-column="48" selection-end-line="252" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.49588138" vertical-offset="4170" max-vertical-offset="4981">
+          <caret line="263" column="40" selection-start-line="263" selection-start-column="40" selection-end-line="263" selection-end-column="40" />
           <folding />
         </state>
       </provider>
