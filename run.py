@@ -11,7 +11,7 @@ from io import StringIO
 from Bio.Blast import NCBIXML
 from Bio.Blast.Applications import NcbiblastnCommandline
 
-FILENAME = "chrX.fa"
+FILENAME = "C:\Users\Эдуард\Desktop\Программы Python\chrX.fa"
 
 
 def get_lcp(text, suffix_array):
