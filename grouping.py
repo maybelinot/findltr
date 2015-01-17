@@ -1,6 +1,7 @@
 import sys, shelve
 
 print('Grouping of patterns')
+
 max_ltr_len, min_ltr_len, min_pattern_len, min_distance = [int(item) for item in sys.argv[1:]]
 
 db = shelve.open('LCP.db', writeback=True)

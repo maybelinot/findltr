@@ -1,13 +1,7 @@
 __author__ = 'Eduard Trott'
 
-from Bio import SeqIO, Seq, SeqRecord, SeqFeature
-from Bio.Alphabet import generic_nucleotide
-from Bio.Seq import translate
-from BCBio import GFF
-from Bio.Blast import NCBIXML
-from Bio.Blast.Applications import NcbiblastnCommandline
-import time, shelve, sys, getopt, os
-from io import StringIO
+from Bio import SeqIO
+import shelve, os, sys
 import algorithms, arguments
 
 class GenomeClass:
@@ -56,47 +50,8 @@ class GenomeClass:
         os.system("grouping.py %d %d %d %d" % (self.max_ltr_len, self.min_ltr_len, self.min_pattern_len, self.min_distance))
 
         # creation of sequences records
-        db = shelve.open('LCP.db', writeback=True)
-        if db['young_lcp']==[]:
-            print('LTRs not found')
-            sys.exit(2)
-        else:
-            unique_name = 'rec_%s.gff' % time.time()
-            print('Found LTRs are saved in ' + unique_name)
+        algorithms.gff_writing(seq)
 
-        records = []
-
-        gff = SeqRecord.SeqRecord(Seq.Seq(seq), "chrX")
-        top_feature = []
-        for idx, item in enumerate(db['young_lcp']):
-            seq1 = SeqRecord.SeqRecord(Seq.Seq(seq[item[0][0]:item[0][1]]), id="seq1")
-            seq2 = SeqRecord.SeqRecord(Seq.Seq(seq[item[1][0]:item[1][1]]), id="seq2")
-            SeqIO.write(seq1, "seq1.fasta", "fasta")
-            SeqIO.write(seq2, "seq2.fasta", "fasta")
-
-            blast_output = NcbiblastnCommandline(query="seq1.fasta", subject="seq2.fasta", outfmt=5)()[0]
-            blast_result_record = NCBIXML.read(StringIO(blast_output))
-            identity = 0
-            for alignment in blast_result_record.alignments:
-                for hsp in alignment.hsps:
-                    identity = max(hsp.identities/hsp.align_length*100, identity)
-            identity = "%.4f" % identity
-            identity = identity.rstrip("0")
-            identity = identity.rstrip(".")
-
-            sub_qualifiers = {"source": "ltrfind", "ID": "UnknownLTR_"+str(idx+1), "Note": "identity "+identity}
-            top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0], item[1][1]),
-                            type="SO:0000186", strand=1, qualifiers=sub_qualifiers))
-        db.close()
-        gff.features = top_feature
-        with open(unique_name, "w") as out_handle:
-            GFF.write([gff], out_handle)
-        with open(unique_name, "r+") as out_handle:
-            file = out_handle.readlines()
-            tmp_gff = [line for line in file if line[0] == '#']
-            tmp_gff.extend([line[:-1]+" %\n" for line in file if line[0] != '#'])
-        with open(unique_name, "w") as out_handle:
-            out_handle.writelines(tmp_gff)
 
 
 if __name__ == "__main__":
