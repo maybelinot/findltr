@@ -1,0 +1,105 @@
+Installation
+===============
+
+To install MGEScan-LTR, follow the steps below:
+
+1. Go to http://darwin.informatics.indiana.edu/cgi-bin/evolution/daphnia_ltr.pl to find
+the ’¡ÈSoftware’¡É on the left bottom of the page.
+
+2. Click ’¡ÈSoftware’¡É to download the program.
+
+3. Uncompress the downloaded file "MGEScan_LTR.tar.gz". This will automatically generate
+the directory "MGEScan_LTR".
+Command: tar zxf MGEScan_LTR.tar.gz
+
+4. Install the following softwares
+	a. TANDEM REPEAT FINDER: http://tandem.bu.edu/trf/trf.html
+	b. EMBOSS package: http://emboss.sourceforge.net/apps/
+	c. HMMER2.x: http://www.psc.edu/general/software/packages/hmmer/hmmer.html
+	d. ltr: Source and excutable files are in the "MER" directory. If it is not compatable with your OS, recompile it again.
+
+5. Make sure you have a Perl Interpreter and a C compiler such as g++.
+
+
+Running the program
+====================
+
+To run MGEScan-LTR, follow the steps below:
+
+1. Update the configuration file ’¡Èpath.conf’¡É.
+	a. data_dir: path for the directory that has output files
+	b. genome_dir: path for the directory that has genome files
+	c. sw_trf: path for tandem repeat finder.
+	d. sw_emboss: path for the directory that has executable files in EMBOSS package. 
+	e. sw_hmmer: path for the directory that has executable files such as hmmsearch in HMMER package.
+	f. sw_rm (optional 1): path for repeatmasker if you want to preprocess
+	g. rm_dir(optional 1): path for the directory where repeatmasker results will be stored if you want to preprocess.
+	h. scaffold(optional2): path for the big file that has all scaffolds.
+
+For example,
+data_dir=/home/mrho/ltr/daphnia/
+genome_dir=/home/mrho/genome/daphnia/chr/
+sw_trf=/home/mrho/sw/trf400.linux.exe
+sw_emboss=/home/mrho/sw/EMBOSS-3.0.0/emboss/
+sw_hmmer=/usr/local/bin/
+sw_rm=/home/mrho/sw/RepeatMasker/RepeatMasker
+rm_dir=/home/mrho/genome/daphnia/rm/
+scaffold=
+
+2.Update the configuration file ’¡Èvalue.conf’¡É.
+	a. min_dist: minimum distance(bp) between LTRs.
+	b. max_dist: maximum distance(bp) between LTRS
+	c. min_len_ltr: minimum length(bp) of LTR.
+	d. max_len_ltr: maximum length(bp) of LTR.
+	e. ltr_sim_condition: minimum similarity(%) for LTRs in an element.
+	f. cluster_sim_condition: minimum similarity(%) for LTRs in a cluster
+	g. len_condition: minimum length(bp) for LTRs aligned in local alignment.
+
+For example, the default values are listed as follows.
+min_dist=2000
+max_dist=20000
+min_len_ltr=130
+max_len_ltr=2000
+ltr_sim_condition=70
+cluster_sim_condition=70
+len_condition=70
+
+3. Put genome files in the directory xxx that is specified in the file ’¡Èconf.path’¡É
+(genome_dir=xxx).
+
+4. Run pre_process.pl to set up the directory structures and mask known repeats other than LTR retrotransposons.
+Command:./pre_process.pl
+
+5. Run find_ltr.pl to identify LTRs.
+command: ./find_ltr.pl
+
+
+Output
+============
+Upon completion, MGEScan-LTR generates a file ’¡Èltr.out’¡É. This output file has information
+about clusters and coordinates of LTR retrotransposons identified. Each cluster of LTR
+retrotransposons starts with the head line of ’¡È[cluster_number]---------’¡É, followed by
+the information of LTR retrotransposons in the cluster. The columns for LTR
+retrotransposons are as follows.
+
+1. LTR_id: unique id of LTRs identified. It consist of two components, sequence file name
+   and id in the file. For example, chr1_2 is the second LTR retrotransposon in the chr1 file.
+2. start position of 5’¡Ç LTR.
+3. end position of 5’¡Ç LTR.
+4. start position of 3’¡Ç LTR.
+5. end position of 3’¡Ç LTR.
+6. strand: + or -.
+7. length of 5’¡Ç LTR.
+8. length of 3’¡Ç LTR.
+9. length of the LTR retrotransposon.
+10.TSD on the left side of the LTR retotransposons.
+11.TSD on the right side of the LTR retrotransposons.
+12.di(tri)nucleotide on the left side of 5’¡ÇLTR
+13.di(tri)nucleotide on the right side of 5’¡ÇLTR
+14.di(tri)nucleotide on the left side of 3’¡ÇLTR
+15.di(tri)nucleotide on the right side of 3’¡ÇLTR 
+
+License
+============
+Copyright (C) 2010 Mina Rho & Haixu Tang.
+You may redistribute this software under the terms of the GNU General Public License.
