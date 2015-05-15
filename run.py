@@ -21,9 +21,9 @@ class GenomeClass:
         self.max_ltr_len = args['max_ltr_len']
         self.min_ltr_len = args['min_ltr_len']
 
-        self.pattern_search = False
-        self.grouping = False
-        self.gff_writing = False
+        self.pattern_search = True
+        self.grouping = True
+        self.gff_writing = True
 
     def __str__(self):
         """
@@ -38,7 +38,7 @@ class GenomeClass:
         De novo identification of young intact LTR retroelements
         """
 
-        seq = str(self.data.seq).upper()
+        seq = str(self.data.seq).upper()[16191939:16211070]
 
         # Pattern searching
         db = shelve.open('LCP.db', writeback=True)
@@ -49,7 +49,7 @@ class GenomeClass:
                                                                         min_pattern_len = self.min_pattern_len,\
                                                                         min_distance = self.min_distance,\
                                                                         max_distance = self.max_distance)
-            db.close()
+        db.close()
 
         # de_novo_second_step
         # grouping of patterns to LTRs
@@ -57,12 +57,15 @@ class GenomeClass:
             os.system("grouping.py %d %d %d %d" % (self.max_ltr_len, self.min_ltr_len, self.min_pattern_len, self.min_distance))
             
         # db['young_lcp'] - grouped LTR retroelements
+        # db = shelve.open('LCP.db', writeback=True)
         db = shelve.open('LCP.db', writeback=True)
-        for idx in range(3):
+        print(db['young_lcp'])
+        for idx in range(6):
             seqq = SeqRecord.SeqRecord(Seq(seq[db['young_lcp'][0][0][0]+idx:db['young_lcp'][0][1][1]]).translate(), id="seq")
             with open("example"+str(idx)+".fasta", "w") as output_handle:
                 SeqIO.write(seqq, output_handle, "fasta")
-                os.system("C:\Python27\python.exe .\hmmsearch-master\hmmer.py -f %s -d %s -l" % ("example"+str(idx)+".fasta", "./pfam/PF03732_fs.hmm"))
+        db.close()
+                # os.system("C:\Python27\python.exe .\Other\hmmsearch-master\hmmer.py -f %s -d %s -l" % ("example"+str(idx)+".fasta", "./pfam/PF03732_fs.hmm"))
         # separation to certain families:
         ##############################################
         # Ty1/Copia
