@@ -67,7 +67,7 @@ Other
 -----
 
 --verbose
-    Include more details (like modified git directories)
+    Include more details 
 --debug
     Turn on debugging output, do not catch exceptions
 
