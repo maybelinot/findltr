@@ -46,24 +46,22 @@ General
 
 Search parameters
 -----------------
++----------------+---------------------------------+----------+
+|     Option     | Description                     | Default  |
++================+=================================+==========+
+| --algorithm    | Algorithm, [kmp|salcp|original] | original |
++----------------+---------------------------------+----------+
+| --pattern_len  | Length of pattern               | 20       |    
++----------------+---------------------------------+----------+
+| --min_distance | Minimal distance between LTRs   | 1000     |
++----------------+---------------------------------+----------+
+|--max_distance  | Maximal distance between LTRs   | 20000    |
++----------------+---------------------------------+----------+
+|--min_ltr_len   | Minimal length of LTRs          | 100      |
++----------------+---------------------------------+----------+
+|--max_ltr_len   | Maximal length of LTRs          | 1000     |
++----------------+---------------------------------+----------+
 
---algorithm
-    Algorithm, [kmp|salcp|original] (default: original)
-
---pattern_len
-   Length of pattern for searching algorithms (default: 20)
-
---min_distance
-    Minimal distance between LTRs (default: 1000)
-
---max_distance
-    Maximal distance between LTRs (default: 20000)
-
---min_ltr_len
-    Minimal length of LTRs (default: 100)
-
---max_ltr_len
-    Maximal length of LTRs (default: 1000)
 
 Other
 -----
