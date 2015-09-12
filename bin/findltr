@@ -101,9 +101,8 @@ class GenomeClass:
         # seq = str(self.data.seq).upper()[16191939:16211070]
 
         # Pattern searching
-        # db = [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
-        # and distance between patterns is in range (min_distance :
-        # max_distance)
+        # [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
+        # and distance between patterns is in range (min_distance :max_distance)
         young_lcp_parts = getattr(algorithms, self.algorithm)(
             seq, self.min_pattern_len, self.min_distance, self.max_distance)
 
@@ -112,64 +111,6 @@ class GenomeClass:
         from findltr.grouping import group
         young_lcp = group(young_lcp_parts, self.max_ltr_len,
                           self.min_ltr_len, self.min_pattern_len, self.min_distance)
-
-        # db['young_lcp'] - grouped LTR retroelements
-        # db = shelve.open('LCP.db', writeback=True)
-
-        # &???????????????????????????????????????????????????????????????????????????????
-        # db = shelve.open('LCP.db', writeback=True)
-        # print(db['young_lcp'])
-        # for idx in range(6):
-        #     seqq = SeqRecord.SeqRecord(
-        #         Seq(seq[db['young_lcp'][0][0][0] + idx:db['young_lcp'][0][1][1]]).translate(), id="seq")
-        #     with open("example" + str(idx) + ".fasta", "w") as output_handle:
-        #         SeqIO.write(seqq, output_handle, "fasta")
-        # db.close()
-
-        # os.system("C:\Python27\python.exe .\Other\hmmsearch-master\hmmer.py -f %s -d %s -l" % ("example"+str(idx)+".fasta", "./pfam/PF03732_fs.hmm"))
-        # separation to certain families:
-        ##############################################
-        # Ty1/Copia
-
-        # LTR - 100:1300 nt
-        # non-coding region
-        # PBS - 18 nt
-        # gag
-        # pol (PR-RT-RH-INT)
-        # PPT A/G 10 nt
-
-        ##############################################
-        # Ty3/Gypsy
-
-        # LTR - 100:1300 nt
-        # non-coding region
-        # PBS - 18 nt
-        # gag
-        # pol ()
-        # PPT A/G 10 nt
-
-        ##############################################
-        # Bel/Pao
-
-        # LTR - 100:900 nt
-        # non-coding region
-        # PBS - 18 nt
-        # gag
-        # pol (PR-RT-RH-INT)
-        # env-like 4000-10000 nt
-        # PPT A/G 10 nt
-
-        ##############################################
-        # Retroviridae
-
-        # LTR - 200:1450 nt
-        # non-coding region
-        # PBS - 18 nt
-        # pol (PR-RT-RH-INT)
-        # env-like
-        # PPT A/G 10 nt
-
-        ##############################################
 
         # creation of sequences records
         from findltr.utils import export_gff
