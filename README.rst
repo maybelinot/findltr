@@ -6,11 +6,9 @@ Command-line tool for de novo identification of LTR retrotransposons.
 
 Requirements
 ============
++  Basic Local Alignment Search Tool (`BLAST`_)::
 
-+ Basic Local Alignment Search Tool ([BLAST](http://www.ncbi.nlm.nih.gov/books/NBK279690/))::
-    
-    $ sudo apt-get install ncbi-blast+
-
+   $ sudo apt-get install ncbi-blast+
 
 Installations
 =============
@@ -76,3 +74,6 @@ Other
     Turn on debugging output, do not catch exceptions
 
 See ``findltr --help`` for complete list of available options.
+
+.. _BLAST: http://www.ncbi.nlm.nih.gov/books/NBK279690/
+
