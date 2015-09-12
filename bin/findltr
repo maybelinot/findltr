@@ -1,0 +1,187 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Author: maybelinot
+# @Email: edik.trott@yandex.ru
+# @Date:   2015-09-12 13:31:59
+# @Last Modified by:   maybelinot
+# @Last Modified time: 2015-09-12 14:34:07
+
+import argparse
+import os
+import sys
+import logging
+
+from Bio import SeqIO, SeqRecord
+from Bio.Seq import Seq
+
+from findltr import algorithms
+from findltr.utils import logr
+
+
+def parse_cli():
+    '''
+    members "public" CLI API
+    '''
+    # Setup the argparser
+    parser = argparse.ArgumentParser(
+        description='Get GFF')
+
+    parser.add_argument(
+        'input', metavar='i', nargs='+', help='Input file', type=str)
+
+    parser.add_argument(
+        '-o', metavar='o', nargs='?', dest='output', help='Output file')
+    parser.add_argument('-a', metavar='a', nargs='?', choices=[
+                        'original', 'kmp', 'salcp'], default='original',
+                        dest='algorithm', help='LTR search algorithm')
+
+    parser.add_argument(
+        '-v', '--verbose', action='store_true', help="turn verbose logging ON")
+    parser.add_argument(
+        '-d', '--debug', action='store_true', help="turn debug logging ON")
+
+    parser.add_argument('-p', '--pattern_len', nargs='?',
+                        help='Minimal pattern length', default=40, type=int)
+
+    parser.add_argument('-min_d', '--min_distance', nargs='?',
+                        help='Minimal distance between LTRs', default=1000, type=int)
+    parser.add_argument('-max_d', '--max_distance', nargs='?',
+                        help='Maximal distance between LTRs', default=20000, type=int)
+
+    parser.add_argument('-min_l', '--min_ltr_len', nargs='?',
+                        help='Minimal LTR length', default=100, type=int)
+    parser.add_argument('-max_l', '--max_ltr_len', nargs='?',
+                        help='Maximal LTR length', default=1000, type=int)
+
+    args = vars(parser.parse_args())  # parse and load args as a dict
+
+    # Go ahead and deal with logging debug/verbosity setting
+    if args['debug']:
+        # logr = logging.getLogger()  # get root logger
+        logr.setLevel(logging.DEBUG)
+    elif args['verbose']:
+        logr.setLevel(logging.INFO)
+    else:
+        logr.setLevel(logging.WARN)
+
+    return args
+
+
+class GenomeClass:
+
+    """
+    Class to represent genome
+    """
+
+    def __init__(self, args):
+        handle = open(args['input'][0], "rU")
+        self.data = next(SeqIO.parse(handle, "fasta"))
+        self.algorithm = args['algorithm']
+        # self.outputfile = args['output']
+        self.min_pattern_len = args['min_pattern_len']
+        self.min_distance = args['min_distance']
+        self.max_distance = args['max_distance']
+        self.max_ltr_len = args['max_ltr_len']
+        self.min_ltr_len = args['min_ltr_len']
+
+    def __str__(self):
+        """
+        Human readable representation of genome
+        """
+
+    def run(self):
+        self.de_novo()
+
+    def de_novo(self):
+        """
+        De novo identification of young intact LTR retroelements
+        """
+
+        seq = str(self.data.seq).upper()
+        # seq = str(self.data.seq).upper()[16191939:16211070]
+
+        # Pattern searching
+        # db = [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
+        # and distance between patterns is in range (min_distance :
+        # max_distance)
+        young_lcp_parts = getattr(algorithms, self.algorithm)(
+            seq, self.min_pattern_len, self.min_distance, self.max_distance)
+
+        # de_novo_second_step
+        # grouping of patterns to LTRs
+        from findltr.grouping import group
+        young_lcp = group(young_lcp_parts, self.max_ltr_len,
+                          self.min_ltr_len, self.min_pattern_len, self.min_distance)
+
+        # db['young_lcp'] - grouped LTR retroelements
+        # db = shelve.open('LCP.db', writeback=True)
+
+        # &???????????????????????????????????????????????????????????????????????????????
+        # db = shelve.open('LCP.db', writeback=True)
+        # print(db['young_lcp'])
+        # for idx in range(6):
+        #     seqq = SeqRecord.SeqRecord(
+        #         Seq(seq[db['young_lcp'][0][0][0] + idx:db['young_lcp'][0][1][1]]).translate(), id="seq")
+        #     with open("example" + str(idx) + ".fasta", "w") as output_handle:
+        #         SeqIO.write(seqq, output_handle, "fasta")
+        # db.close()
+
+        # os.system("C:\Python27\python.exe .\Other\hmmsearch-master\hmmer.py -f %s -d %s -l" % ("example"+str(idx)+".fasta", "./pfam/PF03732_fs.hmm"))
+        # separation to certain families:
+        ##############################################
+        # Ty1/Copia
+
+        # LTR - 100:1300 nt
+        # non-coding region
+        # PBS - 18 nt
+        # gag
+        # pol (PR-RT-RH-INT)
+        # PPT A/G 10 nt
+
+        ##############################################
+        # Ty3/Gypsy
+
+        # LTR - 100:1300 nt
+        # non-coding region
+        # PBS - 18 nt
+        # gag
+        # pol ()
+        # PPT A/G 10 nt
+
+        ##############################################
+        # Bel/Pao
+
+        # LTR - 100:900 nt
+        # non-coding region
+        # PBS - 18 nt
+        # gag
+        # pol (PR-RT-RH-INT)
+        # env-like 4000-10000 nt
+        # PPT A/G 10 nt
+
+        ##############################################
+        # Retroviridae
+
+        # LTR - 200:1450 nt
+        # non-coding region
+        # PBS - 18 nt
+        # pol (PR-RT-RH-INT)
+        # env-like
+        # PPT A/G 10 nt
+
+        ##############################################
+
+        # creation of sequences records
+        from findltr.utils import export_gff
+        export_gff(seq, young_lcp)
+
+
+def main():
+    args = parse_cli()
+
+    genome = GenomeClass(args)
+    genome.run()
+
+
+if __name__ == "__main__":
+    main()

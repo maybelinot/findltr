@@ -1,3 +1,0 @@
-##gff-version 3
-##sequence-region chrX 1 19131
-chrX	ltrfind	SO:0000186	5405	10520	.	+	.	ID=UnknownLTR_1;Note=identity 95.5631 %
