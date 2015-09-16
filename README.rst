@@ -1,3 +1,12 @@
+.. image:: https://travis-ci.org/maybelinot/findltr.svg
+   :target: https://travis-ci.org/maybelinot/findltr
+
+.. image:: https://coveralls.io/repos/maybelinot/findltr/badge.svg
+   :target: https://coveralls.io/r/maybelinot/findltr
+   
+https://travis-ci.org/maybelinot/findltr.svg
+
+
 ======================
     findltr
 ======================
