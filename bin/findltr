@@ -78,7 +78,7 @@ class GenomeClass:
         self.data = next(SeqIO.parse(handle, "fasta"))
         self.algorithm = args['algorithm']
         # self.outputfile = args['output']
-        self.min_pattern_len = args['min_pattern_len']
+        self.min_pattern_len = args['pattern_len']
         self.min_distance = args['min_distance']
         self.max_distance = args['max_distance']
         self.max_ltr_len = args['max_ltr_len']

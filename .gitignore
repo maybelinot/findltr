@@ -56,3 +56,10 @@ docs/source/source_codes
 
 # sphinx build directory cache
 _build
+
+# Fasta
+*.fa
+*.fasta
+
+# GFF
+*.gff
