@@ -41,8 +41,8 @@ def export_gff(seq, young_lcp):
     logr.info('Found LTRs are saved in ' + unique_name)
 
     records = []
-
-    gff = SeqRecord.SeqRecord(Seq.Seq(seq), "chrX")
+    # fix name to chrN
+    gff = SeqRecord.SeqRecord(Seq.Seq(seq), "seq0")
     top_feature = []
     for idx, item in enumerate(young_lcp):
         seq1 = SeqRecord.SeqRecord(
@@ -57,30 +57,33 @@ def export_gff(seq, young_lcp):
 
         blast_output = NcbiblastnCommandline(
             query="/tmp/seq1.fasta", subject="/tmp/seq2.fasta", outfmt=5)()[0]
-        blast_result_record = NCBIXML.read(StringIO(blast_output))
+        blast_result_record = NCBIXML.read(StringIO(unicode(blast_output, 'utf-8')))
         identity = 0
         for alignment in blast_result_record.alignments:
             for hsp in alignment.hsps:
                 identity = max(
-                    hsp.identities / hsp.align_length * 100, identity)
-        identity = "%.4f" % identity
-        identity = identity.rstrip("0")
-        identity = identity.rstrip(".")
+                    hsp.identities / float(hsp.align_length) * 100.0, identity)
+        identity = "%0.2f" % identity
+        # cut zeros tail
+        # identity = identity.rstrip("0")
+        # identity = identity.rstrip(".")
 
         sub_qualifiers = {"source": "ltrfind", "ID": "UnknownLTR_" +
-                          str(idx + 1), "Note": "identity " + identity}
+                          str(idx + 1), "ltr_similarity": identity}
         top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0], item[1][1]),
-                                                 type="SO:0000186", strand=1, qualifiers=sub_qualifiers))
+                                                 type="Retrotransposon", strand=0, qualifiers=sub_qualifiers))
 
+        sub_qualifiers_ltrs = {"source": "ltrfind", "Parent": "UnknownLTR_" +
+                          str(idx + 1)}
+
+        top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0], item[0][1]),
+                                                 type="long_terminal_repeat", strand=0, qualifiers=sub_qualifiers_ltrs))
+
+        top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[1][0], item[1][1]),
+                                                 type="long_terminal_repeat", strand=0, qualifiers=sub_qualifiers_ltrs))
     gff.features = top_feature
     with open(unique_name, "w") as out_handle:
         GFF.write([gff], out_handle)
-    with open(unique_name, "r+") as out_handle:
-        file = out_handle.readlines()
-        tmp_gff = [line for line in file if line[0] == '#']
-        tmp_gff.extend([line[:-1] + " %\n" for line in file if line[0] != '#'])
-    with open(unique_name, "w") as out_handle:
-        out_handle.writelines(tmp_gff)
 
 
 class StandardArgs(object):

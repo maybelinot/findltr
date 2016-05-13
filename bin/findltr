@@ -98,7 +98,7 @@ class GenomeClass:
         """
 
         seq = str(self.data.seq).upper()
-        # seq = str(self.data.seq).upper()[16191939:16211070]
+        # seq = str(self.data.seq).upper()[16191939:16311070]
 
         # Pattern searching
         # [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
