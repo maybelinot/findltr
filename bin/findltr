@@ -97,6 +97,7 @@ class GenomeClass:
         De novo identification of young intact LTR retroelements
         """
 
+
         seq = str(self.data.seq).upper()
         # seq = str(self.data.seq).upper()[16191939:16311070]
 

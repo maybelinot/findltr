@@ -37,7 +37,7 @@ else:
 
 def export_gff(seq, young_lcp):
 
-    unique_name = 'rec_%s.gff' % time.time()
+    unique_name = 'rec_%s.gff3' % time.time()
     logr.info('Found LTRs are saved in ' + unique_name)
 
     records = []
@@ -57,7 +57,7 @@ def export_gff(seq, young_lcp):
 
         blast_output = NcbiblastnCommandline(
             query="/tmp/seq1.fasta", subject="/tmp/seq2.fasta", outfmt=5)()[0]
-        blast_result_record = NCBIXML.read(StringIO(unicode(blast_output, 'utf-8')))
+        blast_result_record = NCBIXML.read(StringIO(unicode(blast_output, "utf-8")))
         identity = 0
         for alignment in blast_result_record.alignments:
             for hsp in alignment.hsps:
@@ -67,21 +67,39 @@ def export_gff(seq, young_lcp):
         # cut zeros tail
         # identity = identity.rstrip("0")
         # identity = identity.rstrip(".")
+        # improve seqfeatures appending
 
-        sub_qualifiers = {"source": "ltrfind", "ID": "UnknownLTR_" +
-                          str(idx + 1), "ltr_similarity": identity}
+        sub_qualifiers_region = {"source": "ltrfind", 
+                            "ID": "repeat_region" + str(idx + 1)}
+        top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0] - 4, item[1][1] + 4),
+                                 type="repeat_region", strand=0, qualifiers=sub_qualifiers_region))
+
+        sub_qualifiers_target_site = {"source": "ltrfind", 
+                            "Parent": "repeat_region" + str(idx + 1)}
+        top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0] - 4, item[0][0]),
+                                 type="target_site_duplication", strand=0, qualifiers=sub_qualifiers_target_site))
+        sub_qualifiers = {"source": "ltrfind", 
+                            "ID": "LTR_retrotransposon" + str(idx + 1), 
+                            "Parent": "repeat_region" + str(idx + 1),
+                            "ltr_similarity": identity,
+                            "seq_number": "0"}
         top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0], item[1][1]),
-                                                 type="Retrotransposon", strand=0, qualifiers=sub_qualifiers))
+                                 type="LTR_retrotransposon", strand=0, qualifiers=sub_qualifiers))
 
-        sub_qualifiers_ltrs = {"source": "ltrfind", "Parent": "UnknownLTR_" +
+        sub_qualifiers_ltrs = {"source": "ltrfind", "Parent": "LTR_retrotransposon" +
                           str(idx + 1)}
 
         top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0], item[0][1]),
-                                                 type="long_terminal_repeat", strand=0, qualifiers=sub_qualifiers_ltrs))
+                                 type="long_terminal_repeat", strand=0, qualifiers=sub_qualifiers_ltrs))
 
         top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[1][0], item[1][1]),
-                                                 type="long_terminal_repeat", strand=0, qualifiers=sub_qualifiers_ltrs))
+                                 type="long_terminal_repeat", strand=0, qualifiers=sub_qualifiers_ltrs))
+
+        top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[1][1], item[1][1] + 4),
+                                 type="target_site_duplication", strand=0, qualifiers=sub_qualifiers_target_site))
     gff.features = top_feature
+    # track name='findltr' description='findltr Supplied Track'
+
     with open(unique_name, "w") as out_handle:
         GFF.write([gff], out_handle)
 
