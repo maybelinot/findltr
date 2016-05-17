@@ -51,7 +51,7 @@ def parse_cli():
     parser.add_argument('-min_l', '--min_ltr_len', nargs='?',
                         help='Minimal LTR length', default=100, type=int)
     parser.add_argument('-max_l', '--max_ltr_len', nargs='?',
-                        help='Maximal LTR length', default=1000, type=int)
+                        help='Maximal LTR length', default=3500, type=int)
 
     args = vars(parser.parse_args())  # parse and load args as a dict
 
