@@ -11,8 +11,11 @@ import os
 import sys
 import logging
 
+import yaml
 from Bio import SeqIO, SeqRecord
 from Bio.Seq import Seq
+from BCBio.GFF import GFFExaminer
+from BCBio import GFF
 
 from findltr import algorithms
 from findltr.utils import logr
@@ -27,31 +30,20 @@ def parse_cli():
         description='Get GFF')
 
     parser.add_argument(
-        'input', metavar='i', nargs='+', help='Input file', type=str)
+        'input', metavar='i', nargs='+', help='Input gff file', type=str)
 
     parser.add_argument(
-        '-o', metavar='o', nargs='?', dest='output', help='Output file')
-    parser.add_argument('-a', metavar='a', nargs='?', choices=[
-                        'original', 'kmp', 'salcp'], default='original',
-                        dest='algorithm', help='LTR search algorithm')
+        'family_annotation', metavar='a', nargs='+', help=('Yaml file with '
+                        'annotated HMM profiles to exact family, see example'),
+                         type=str)
 
     parser.add_argument(
         '-v', '--verbose', action='store_true', help="turn verbose logging ON")
     parser.add_argument(
         '-d', '--debug', action='store_true', help="turn debug logging ON")
 
-    parser.add_argument('-p', '--pattern_len', nargs='?',
-                        help='Minimal pattern length', default=40, type=int)
-
-    parser.add_argument('-min_d', '--min_distance', nargs='?',
-                        help='Minimal distance between LTRs', default=1000, type=int)
-    parser.add_argument('-max_d', '--max_distance', nargs='?',
-                        help='Maximal distance between LTRs', default=20000, type=int)
-
-    parser.add_argument('-min_l', '--min_ltr_len', nargs='?',
-                        help='Minimal LTR length', default=100, type=int)
-    parser.add_argument('-max_l', '--max_ltr_len', nargs='?',
-                        help='Maximal LTR length', default=2000, type=int)
+    parser.add_argument('-min_c', '--min_count', nargs='?',
+                        help='Minimal count of protein matches to include to family of LTR', default=1, type=int)
 
     args = vars(parser.parse_args())  # parse and load args as a dict
 
@@ -118,11 +110,39 @@ class GenomeClass:
         export_gff(seq, young_lcp, self.outputfile)
 
 
+def family_annotation(in_gff, in_yaml, min_count):
+    examiner = GFFExaminer()
+    in_handle = open(in_gff)
+    families = yaml.load(open(in_yaml))
+    ltr_rtrns = []
+    cnt = 0
+    l = list(GFF.parse(in_handle))[0].features
+    rec_families = []
+    for rec in l:
+        if len([sub_feat.type for sub_feat in rec.sub_features[1].sub_features if sub_feat.type in ['protein_match', 'RR_tract', 'primer_binding_site']])>=1:
+            # possible putative LTR retrotransposons
+            cnt+=1
+            proteins = []
+            for sub_feat in rec.sub_features[1].sub_features:
+                if sub_feat.type == 'protein_match':
+                    proteins.append(sub_feat.qualifiers['name'][0])
+            rec_family = {}
+            for key, items in families.items():
+                rec_family[key] = len(list(set(proteins).intersection(items)))
+            rec_families.append(rec_family)
+    # print '\n'.join([max(d, key=d.get) for d in rec_families if max([v[1] for v in d.iteritems()])>0])
+    print '\n'.join([', '.join([f for f in d.keys() if d[f]>=min_count]) for d in rec_families if max([v[1] for v in d.iteritems()])>0])
+    # print(rec_families)
+    # print cnt, len(l)
+    in_handle.close()
+
+
 def main():
     args = parse_cli()
+    family_annotation(args['input'][0], args['family_annotation'][0], args['min_count'])
+    # genome = GenomeClass(args)
+    # genome.run()
 
-    genome = GenomeClass(args)
-    genome.run()
 
 
 if __name__ == "__main__":

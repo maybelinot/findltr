@@ -35,9 +35,9 @@ else:
     config = {}
 
 
-def export_gff(seq, young_lcp):
+def export_gff(seq, young_lcp, outputfile):
 
-    unique_name = 'rec_%s.gff3' % time.time()
+    unique_name = outputfile or 'rec_%s.gff3' % time.time()
     logr.info('Found LTRs are saved in ' + unique_name)
 
     records = []
@@ -69,17 +69,17 @@ def export_gff(seq, young_lcp):
         # identity = identity.rstrip(".")
         # improve seqfeatures appending
 
-        sub_qualifiers_region = {"source": "ltrfind", 
+        sub_qualifiers_region = {"source": "ltrfind",
                             "ID": "repeat_region" + str(idx + 1)}
         top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0] - 4, item[1][1] + 4),
                                  type="repeat_region", strand=0, qualifiers=sub_qualifiers_region))
 
-        sub_qualifiers_target_site = {"source": "ltrfind", 
+        sub_qualifiers_target_site = {"source": "ltrfind",
                             "Parent": "repeat_region" + str(idx + 1)}
         top_feature.append(SeqFeature.SeqFeature(SeqFeature.FeatureLocation(item[0][0] - 4, item[0][0]),
                                  type="target_site_duplication", strand=0, qualifiers=sub_qualifiers_target_site))
-        sub_qualifiers = {"source": "ltrfind", 
-                            "ID": "LTR_retrotransposon" + str(idx + 1), 
+        sub_qualifiers = {"source": "ltrfind",
+                            "ID": "LTR_retrotransposon" + str(idx + 1),
                             "Parent": "repeat_region" + str(idx + 1),
                             "ltr_similarity": identity,
                             "seq_number": "0"}

@@ -20,10 +20,10 @@ if not __version__:
 # acceptable version schema: major.minor[.patch][-sub[ab]]
 __pkg__ = 'findltr'
 __pkgdir__ = {'findltr': 'findltr'}
-__pkgs__ = ['findltr', ]
+__pkgs__ = ['findltr']
 __provides__ = ['findltr']
 __desc__ = 'Get membership details from various data sources.'
-__scripts__ = ['bin/findltr']
+__scripts__ = ['bin/findltr', 'bin/ltrfamilies']
 __irequires__ = [
     # CORE DEPENDENCIES
     # 'functioncache==0.92', ???
