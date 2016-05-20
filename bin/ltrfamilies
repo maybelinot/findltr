@@ -59,69 +59,20 @@ def parse_cli():
     return args
 
 
-class GenomeClass:
-
-    """
-    Class to represent genome
-    """
-
-    def __init__(self, args):
-        handle = open(args['input'][0], "rU")
-        self.data = next(SeqIO.parse(handle, "fasta"))
-        self.algorithm = args['algorithm']
-        self.outputfile = args['output']
-        self.min_pattern_len = args['pattern_len']
-        self.min_distance = args['min_distance']
-        self.max_distance = args['max_distance']
-        self.max_ltr_len = args['max_ltr_len']
-        self.min_ltr_len = args['min_ltr_len']
-
-    def __str__(self):
-        """
-        Human readable representation of genome
-        """
-
-    def run(self):
-        self.de_novo()
-
-    def de_novo(self):
-        """
-        De novo identification of young intact LTR retroelements
-        """
-
-
-        seq = str(self.data.seq).upper()
-        # seq = str(self.data.seq).upper()[16191939:16311070]
-
-        # Pattern searching
-        # [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
-        # and distance between patterns is in range (min_distance :max_distance)
-        young_lcp_parts = getattr(algorithms, self.algorithm)(
-            seq, self.min_pattern_len, self.min_distance, self.max_distance)
-
-        # de_novo_second_step
-        # grouping of patterns to LTRs
-        from findltr.grouping import group
-        young_lcp = group(young_lcp_parts, self.max_ltr_len,
-                          self.min_ltr_len, self.min_pattern_len, self.min_distance)
-
-        # creation of sequences records
-        from findltr.utils import export_gff
-        export_gff(seq, young_lcp, self.outputfile)
 
 
 def family_annotation(in_gff, in_yaml, min_count):
     examiner = GFFExaminer()
     in_handle = open(in_gff)
     families = yaml.load(open(in_yaml))
+    gff = SeqRecord.SeqRecord(Seq(""), "seq0")
     ltr_rtrns = []
-    cnt = 0
     l = list(GFF.parse(in_handle))[0].features
+    records = []
     rec_families = []
     for rec in l:
         if len([sub_feat.type for sub_feat in rec.sub_features[1].sub_features if sub_feat.type in ['protein_match', 'RR_tract', 'primer_binding_site']])>=1:
             # possible putative LTR retrotransposons
-            cnt+=1
             proteins = []
             for sub_feat in rec.sub_features[1].sub_features:
                 if sub_feat.type == 'protein_match':
@@ -129,19 +80,17 @@ def family_annotation(in_gff, in_yaml, min_count):
             rec_family = {}
             for key, items in families.items():
                 rec_family[key] = len(list(set(proteins).intersection(items)))
-            rec_families.append(rec_family)
-    # print '\n'.join([max(d, key=d.get) for d in rec_families if max([v[1] for v in d.iteritems()])>0])
-    print '\n'.join([', '.join([f for f in d.keys() if d[f]>=min_count]) for d in rec_families if max([v[1] for v in d.iteritems()])>0])
-    # print(rec_families)
-    # print cnt, len(l)
+            rec.sub_features[1].qualifiers['family'] = ','.join([f for f in rec_family.keys() if rec_family[f]>=min_count])
+        records.append(rec)
+    gff.features = records
+    with open("fam_annotation.gff3", "w") as out_handle:
+        GFF.write([gff], out_handle)
     in_handle.close()
 
 
 def main():
     args = parse_cli()
     family_annotation(args['input'][0], args['family_annotation'][0], args['min_count'])
-    # genome = GenomeClass(args)
-    # genome.run()
 
 
 

@@ -29,8 +29,8 @@ logr = logging.getLogger('findltr')
 
 def export_gff(seq, young_lcp, outputfile):
 
-    unique_name = outputfile or 'rec_%s.gff3' % time.time()
-    logr.info('Found LTRs are saved in ' + unique_name)
+    gff_output = outputfile or 'rec_%s.gff3' % time.time()
+    logr.info('Found LTRs are saved in ' + gff_output)
 
     records = []
     # fix name to chrN based on input seq
@@ -92,7 +92,7 @@ def export_gff(seq, young_lcp, outputfile):
     gff.features = top_feature
     # track name='findltr' description='findltr Supplied Track'
 
-    with open(unique_name, "w") as out_handle:
+    with open(gff_output, "w") as out_handle:
         GFF.write([gff], out_handle)
 
 
