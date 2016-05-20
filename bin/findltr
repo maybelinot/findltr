@@ -53,6 +53,7 @@ def parse_cli():
     parser.add_argument('-max_l', '--max_ltr_len', nargs='?',
                         help='Maximal LTR length', default=2000, type=int)
 
+
     args = vars(parser.parse_args())  # parse and load args as a dict
 
     # Go ahead and deal with logging debug/verbosity setting
@@ -98,8 +99,8 @@ class GenomeClass:
         """
 
 
+        # seq = str(self.data.seq).upper()
         seq = str(self.data.seq).upper()
-        # seq = str(self.data.seq).upper()[16191939:16311070]
 
         # Pattern searching
         # [[start_of_pattern, start_of_appropriate_pattern], ...] where pattern has a length equal min_pattern_len
@@ -116,6 +117,7 @@ class GenomeClass:
         # creation of sequences records
         from findltr.utils import export_gff
         export_gff(seq, young_lcp, self.outputfile)
+
 
 
 def main():

@@ -26,14 +26,6 @@ import yaml
 logging.basicConfig(format='>> %(message)s')
 logr = logging.getLogger('findltr')
 
-''' Load the config file so modules can import and reuse '''
-CONFIG_FILE = os.path.expanduser('~/.findltr')
-if os.path.exists(CONFIG_FILE):
-    with open(CONFIG_FILE) as _:
-        config = yaml.load(_)
-else:
-    config = {}
-
 
 def export_gff(seq, young_lcp, outputfile):
 
@@ -41,7 +33,7 @@ def export_gff(seq, young_lcp, outputfile):
     logr.info('Found LTRs are saved in ' + unique_name)
 
     records = []
-    # fix name to chrN
+    # fix name to chrN based on input seq
     gff = SeqRecord.SeqRecord(Seq.Seq(seq), "seq0")
     top_feature = []
     for idx, item in enumerate(young_lcp):
@@ -102,34 +94,6 @@ def export_gff(seq, young_lcp, outputfile):
 
     with open(unique_name, "w") as out_handle:
         GFF.write([gff], out_handle)
-
-
-class StandardArgs(object):
-
-    '''
-    FIXME: DOCS...
-    '''
-    uid = None
-    password = None
-    base_url = None
-
-    def __init__(self, args=None, config=None):
-        '''
-        FIXME: DOCS...
-        '''
-        args = args or {}
-        config = config or {}
-        assert isinstance(args, dict)
-        assert isinstance(config, dict)
-        self._args, self._config = args, config
-
-    def get(self, key, default=None, **kwargs):
-        user_value = self._args.get(key) or self._config.get(key)
-        if hasattr(default, '__call__'):
-            value = user_value or default(**kwargs)
-        else:
-            value = user_value or default
-        return value
 
 
 def run(cmd):
