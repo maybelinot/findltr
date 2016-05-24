@@ -1,0 +1,32 @@
+##gff-version 3
+##sequence-region seq0 1 1166000
+seq0	ltrfind	repeat_region	452	5313	.	.	.	ID=repeat_region1
+seq0	ltrfind	target_site_duplication	452	455	.	.	.	Parent=repeat_region1
+seq0	ltrfind	LTR_retrotransposon	456	5309	.	.	.	ID=LTR_retrotransposon1;Parent=repeat_region1;ltr_similarity=93.55;seq_number=0
+seq0	ltrfind	long_terminal_repeat	456	734	.	.	.	Parent=LTR_retrotransposon1
+seq0	ltrfind	long_terminal_repeat	5031	5309	.	.	.	Parent=LTR_retrotransposon1
+seq0	ltrfind	target_site_duplication	5310	5313	.	.	.	Parent=repeat_region1
+seq0	ltrfind	repeat_region	272834	287725	.	.	.	ID=repeat_region2
+seq0	ltrfind	target_site_duplication	272834	272837	.	.	.	Parent=repeat_region2
+seq0	ltrfind	LTR_retrotransposon	272838	287721	.	.	.	ID=LTR_retrotransposon2;Parent=repeat_region2;ltr_similarity=98.25;seq_number=0
+seq0	ltrfind	long_terminal_repeat	272838	273867	.	.	.	Parent=LTR_retrotransposon2
+seq0	ltrfind	long_terminal_repeat	286695	287721	.	.	.	Parent=LTR_retrotransposon2
+seq0	ltrfind	target_site_duplication	287722	287725	.	.	.	Parent=repeat_region2
+seq0	ltrfind	repeat_region	748795	755018	.	.	.	ID=repeat_region3
+seq0	ltrfind	target_site_duplication	748795	748798	.	.	.	Parent=repeat_region3
+seq0	ltrfind	LTR_retrotransposon	748799	755014	.	.	.	ID=LTR_retrotransposon3;Parent=repeat_region3;ltr_similarity=94.61;seq_number=0
+seq0	ltrfind	long_terminal_repeat	748799	749105	.	.	.	Parent=LTR_retrotransposon3
+seq0	ltrfind	long_terminal_repeat	754737	755014	.	.	.	Parent=LTR_retrotransposon3
+seq0	ltrfind	target_site_duplication	755015	755018	.	.	.	Parent=repeat_region3
+seq0	ltrfind	repeat_region	866321	867860	.	.	.	ID=repeat_region4
+seq0	ltrfind	target_site_duplication	866321	866324	.	.	.	Parent=repeat_region4
+seq0	ltrfind	LTR_retrotransposon	866325	867856	.	.	.	ID=LTR_retrotransposon4;Parent=repeat_region4;ltr_similarity=92.66;seq_number=0
+seq0	ltrfind	long_terminal_repeat	866325	866542	.	.	.	Parent=LTR_retrotransposon4
+seq0	ltrfind	long_terminal_repeat	867639	867856	.	.	.	Parent=LTR_retrotransposon4
+seq0	ltrfind	target_site_duplication	867857	867860	.	.	.	Parent=repeat_region4
+seq0	ltrfind	repeat_region	1159357	1165201	.	.	.	ID=repeat_region5
+seq0	ltrfind	target_site_duplication	1159357	1159360	.	.	.	Parent=repeat_region5
+seq0	ltrfind	LTR_retrotransposon	1159361	1165197	.	.	.	ID=LTR_retrotransposon5;Parent=repeat_region5;ltr_similarity=98.36;seq_number=0
+seq0	ltrfind	long_terminal_repeat	1159361	1159789	.	.	.	Parent=LTR_retrotransposon5
+seq0	ltrfind	long_terminal_repeat	1164837	1165197	.	.	.	Parent=LTR_retrotransposon5
+seq0	ltrfind	target_site_duplication	1165198	1165201	.	.	.	Parent=repeat_region5

@@ -36,7 +36,8 @@ def parse_cli():
         'family_annotation', metavar='a', nargs='+', help=('Yaml file with '
                         'annotated HMM profiles to exact family, see example'),
                          type=str)
-
+    parser.add_argument(
+        '-o', metavar='o', nargs='?', dest='output', help='Output file')
     parser.add_argument(
         '-v', '--verbose', action='store_true', help="turn verbose logging ON")
     parser.add_argument(
@@ -59,9 +60,7 @@ def parse_cli():
     return args
 
 
-
-
-def family_annotation(in_gff, in_yaml, min_count):
+def family_annotation(in_gff, in_yaml, min_count, out_gff="family_annotation.gff3"):
     examiner = GFFExaminer()
     in_handle = open(in_gff)
     families = yaml.load(open(in_yaml))
@@ -83,15 +82,14 @@ def family_annotation(in_gff, in_yaml, min_count):
             rec.sub_features[1].qualifiers['family'] = ','.join([f for f in rec_family.keys() if rec_family[f]>=min_count])
         records.append(rec)
     gff.features = records
-    with open("fam_annotation.gff3", "w") as out_handle:
+    with open(out_gff, "w") as out_handle:
         GFF.write([gff], out_handle)
     in_handle.close()
 
 
 def main():
     args = parse_cli()
-    family_annotation(args['input'][0], args['family_annotation'][0], args['min_count'])
-
+    family_annotation(args['input'][0],args['family_annotation'][0], args['min_count'], args['output'])
 
 
 if __name__ == "__main__":

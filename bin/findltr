@@ -118,12 +118,17 @@ class GenomeClass:
         from findltr.utils import export_gff
         export_gff(seq, young_lcp, self.outputfile)
 
-
+    def slice_fasta(self, positions):
+        output_handle = open("chr6_example.fasta", "w")
+        SeqIO.write(SeqRecord.SeqRecord(Seq(str(self.data.seq).upper()[positions[0]:positions[1]]),
+                   id="chr6"), output_handle, "fasta")
+        output_handle.close()
 
 def main():
     args = parse_cli()
 
     genome = GenomeClass(args)
+    # genome.slice_fasta([113263000,114429000])
     genome.run()
 
 
