@@ -17,6 +17,8 @@ Requirements
 
    $ sudo apt-get install ncbi-blast+
 
++ Genome Tools(`GT`_) with enabled HMMER option.
+
 Installations
 =============
 Example install, using VirtualEnv::
@@ -81,4 +83,5 @@ Other
 See ``findltr --help`` for complete list of available options.
 
 .. _BLAST: http://www.ncbi.nlm.nih.gov/books/NBK279690/
+.. _GT: https://github.com/genometools/genometools
 
