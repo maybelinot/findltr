@@ -60,7 +60,8 @@ def parse_cli():
     return args
 
 
-def family_annotation(in_gff, in_yaml, min_count, out_gff="family_annotation.gff3"):
+def family_annotation(in_gff, in_yaml, min_count, out_gff):
+    out_gff = out_gff or "family_annotation.gff3"
     examiner = GFFExaminer()
     in_handle = open(in_gff)
     families = yaml.load(open(in_yaml))
