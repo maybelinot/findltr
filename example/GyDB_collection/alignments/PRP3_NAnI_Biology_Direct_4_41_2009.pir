@@ -1,9 +1,0 @@
->P1;SURL
-EADI
-*
->P1;Tto1
-NANF
-*
->P1;Galadriel
-NAKA
-*
