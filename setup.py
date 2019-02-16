@@ -29,7 +29,7 @@ __irequires__ = [
     # 'functioncache==0.92', ???
     'bcbio-gff',
     'argparse',
-    'pyyaml==3.11',
+    'pyyaml>=4.2b1',
     'biopython==1.64',
 ]
 __xrequires__ = {
